@@ -21,7 +21,7 @@ class Siswa extends BaseController
         $session = session();
 
         // Check if the 'logged_in' session variable exists and is true
-        if ($session->logged_in && $session->level == "siswa") {
+        if ($session->logged_in == TRUE && $session->level == "siswa") {
             return true;
         }
 
@@ -169,33 +169,6 @@ class Siswa extends BaseController
 
         return $this->response->setBody($fullView);
     }
-
-    // public function update_profil()
-    // {
-
-    //     // Ambil data dari form menggunakan input
-    //     $nisn = $this->request->getPost('nisn');
-    //     $alamat = $this->request->getPost('alamat');
-    //     $no_hp = $this->request->getPost('no_hp');
-    //     $password = $this->request->getPost('password');
-
-    //     // Buat array untuk data yang akan diupdate
-    //     $data = [
-    //         'alamat' => $alamat,
-    //         'no_hp' => $no_hp
-    //     ];
-
-    //     // Jika password diisi, maka update password juga
-    //     if (!empty($password)) {
-    //         $data['password'] = password_hash($password, PASSWORD_DEFAULT);
-    //     }
-
-    //     // Panggil model untuk melakukan update
-    //     $userModel = new UserModel();
-    //     $this->UserModel->update_profil($nisn, $data);
-
-    //     // Redirect atau tampilkan pesan berhasil update sesuai kebutuhan aplikasi Anda
-    // }
 
     public function update_profil()
     {

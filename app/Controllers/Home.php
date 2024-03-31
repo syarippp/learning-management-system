@@ -98,6 +98,7 @@ class Home extends BaseController
                     session()->set([
                         'username' => $dataUser->username,
                         'level' => $dataUser->level,
+                        'kelas' => $dataUser->kelas,
                         'id_users' => $dataUser->id_users,
                         'nama_lengkap' => $dataUser->nama_lengkap,
                         'logged_in' => TRUE

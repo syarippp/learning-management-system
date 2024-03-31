@@ -27,16 +27,6 @@ class UserModel extends Model
             ->getResult();
     }
 
-    public function update_profil($id_users, $data)
-    {
-        // Lakukan update berdasarkan ID pengguna
-        $this->db->where('id_users', $id_users);
-        $this->db->update('users', $data);
-        
-        // Return nilai boolean untuk menandakan apakah update berhasil atau tidak
-        return $this->db->affected_rows() > 0;
-    }
-
     public function getMapel()
     {
         $id_mapel = $_GET['id'] ?? null;
@@ -45,6 +35,7 @@ class UserModel extends Model
             return $this->db->table('detail_mapel')
                         ->join('mapel', 'mapel.id_mapel = detail_mapel.id_mapel')
                         ->where('detail_mapel.status', 'aktif')
+                        ->where('detail_mapel.kelas_mapel', session('kelas'))
                         ->where('detail_mapel.id_mapel', $id_mapel)
                         ->get()
                         ->getResult();

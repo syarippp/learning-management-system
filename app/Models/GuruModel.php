@@ -19,6 +19,14 @@ class GuruModel extends Model
             ->getResult();
     }
 
+    public function getDataUsers()
+    {
+        return $this->db->table('users')
+            ->where('id_users', session('id_users'))
+            ->get()
+            ->getResult();
+    }
+
     public function countActiveMapels()
     {
         return $this->db->table('detail_mapel')
@@ -60,6 +68,20 @@ class GuruModel extends Model
             return $this->db->table('detail_mapel')
                         ->join('mapel', 'mapel.id_mapel = detail_mapel.id_mapel')
                         ->where('detail_mapel.id_mapel', $id_mapel)
+                        ->get()
+                        ->getResult();
+        } else {
+            return null;
+        }
+    }
+
+    public function getMapelNama()
+    {
+        $id_mapel = $_GET['id'] ?? null;
+
+        if ($id_mapel !== null && is_numeric($id_mapel)) {
+            return $this->db->table('mapel')
+                        ->where('id_mapel', $id_mapel)
                         ->get()
                         ->getResult();
         } else {

@@ -577,6 +577,22 @@
     <!--**********************************
         Scripts
     ***********************************-->
+
+    <script>
+        function goBack() {
+            // Ambil URL referer dari header HTTP_REFERER
+            var referer = document.referrer;
+
+            // Jika ada referer, arahkan kembali
+            if (referer) {
+                window.location.href = referer;
+            } else {
+                // Jika tidak ada referer, lakukan sesuatu (misalnya, arahkan ke halaman utama)
+                window.location.href = '<?= base_url() ?>';
+            }
+        }
+    </script>
+    
     <script src="<?= base_url() ?>main/assets/plugins/common/common.min.js"></script>
     <script src="<?= base_url() ?>main/js/custom.min.js"></script>
     <script src="<?= base_url() ?>main/js/settings.js"></script>
@@ -588,6 +604,9 @@
     <script src="<?= base_url() ?>main/js/dashboard/dashboard-18.js"></script>
     <script src="<?= base_url() ?>assets/plugins/datatables/js/jquery.dataTables.min.js"></script>
     <script src="<?= base_url() ?>main/js/plugins-init/datatables.init.js"></script>
+
+    <script src="<?= base_url() ?>assets/plugins/ckeditor/ckeditor.js"></script>
+    <script src="<?= base_url() ?>main/js/plugins-init/editor-ck-init.js"></script>
 </body>
 
 </html>
