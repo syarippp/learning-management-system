@@ -31,7 +31,7 @@
                                         <div class="card-body">
                                             <h4 class="card-title">PENDAHULUAN</h4>
                                             <div class="card-content">
-                                                <p style="color: black;"><?php foreach ($materi_mapel as $mm): echo $mm->pendahuluan."<br><br>Proin pharetra ut ex vitae aliquet. Phasellus pharetra eleifend sapien, vel luctus erat faucibus vitae. Nam ultricies dolor augue, ut vestibulum nulla ornare non. Duis at quam quis turpis egestas viverra. Vestibulum eu condimentum lectus. Cras fermentum justo vitae bibendum pretium. Cras augue arcu, tincidunt in nisl ut, viverra gravida mi. Integer convallis odio a est mattis, venenatis maximus felis cursus. Proin facilisis quis felis quis convallis.";?><?php endforeach; ?></p>
+                                                <p style="color: black;"><?php foreach ($materi_mapel as $mm): echo $mm->pendahuluan;?><?php endforeach; ?></p>
                                             </div>
                                         </div>
                                     </div>
@@ -44,7 +44,7 @@
                                             <div class="card-content">
                                                 
                                                 <div class="embed-responsive embed-responsive-16by9">
-                                                  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
+                                                  <iframe class="embed-responsive-item" src="<?php foreach ($materi_mapel as $mm): echo $mm->video_materi;?><?php endforeach; ?>" allowfullscreen></iframe>
                                                 </div>
 
                                             </div>
@@ -59,8 +59,8 @@
                                             <h4 class="card-title">Materi (1)<a class="float-right text-info" href="javascript:void()"><!-- <small>Show All (25)</small> --></a></h4>
                                             <div class="d-flex flex-wrap">
                                                 <div class="file-container">
-                                                    <a href="<?= base_url('pdf/')?>tes.pdf" download><img src="<?= base_url(); ?>assets/images/icons/35.png" alt="">
-                                                    <p><small>Materi 1.pdf</small>
+                                                    <a href="<?= base_url('pdf/')?><?php foreach ($materi_mapel as $mm): echo $mm->materi;?><?php endforeach; ?>" download><img src="<?= base_url(); ?>assets/images/icons/35.png" alt="">
+                                                    <p><small><?php foreach ($materi_mapel as $mm): echo $mm->materi;?><?php endforeach; ?></small>
                                                     </p></a>
                                                 </div>
                                             </div>

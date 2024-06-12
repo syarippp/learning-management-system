@@ -33,13 +33,16 @@
                                         <?php echo session()->getFlashdata('berhasilhapusmaterimapel'); ?>
                                 <?php endif; ?>
 
-
+                            <form onsubmit="convertNewlines()" method="POST" enctype="multipart/form-data" action="<?= base_url('guru/edit_materi') ?> ">
                             <div class="row">
                                 <div class="col-12">
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title">Pendahuluan</h4>
-                                            <div id="ck_editor"></div>
+                                            <textarea id="myTextarea" name="myTextarea" class="form-control" rows="10"><?php foreach ($isi_materimapel as $imm): ?><?php echo $imm->pendahuluan; endforeach; ?>
+                                            </textarea>
+                                            <input type="text" name="id_mat" value="<?= $id_mat; ?>" hidden>
+                                            <input type="text" name="id_dm" value="<?= $id_dm; ?>" hidden>
                                         </div>
                                     </div>
                                 </div>
@@ -50,7 +53,10 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title">File Materi</h4>
-                                            <input type="file" name="file_materi" class="form-control">
+                                            <div class="mb-2">
+                                                <strong>File saat ini:</strong> <span id="current-file"><?php foreach ($isi_materimapel as $imm): ?><?php echo $imm->materi; endforeach; ?>.pdf</span>
+                                            </div>
+                                            <input type="file" name="file_materi" class="form-control" id="file_materi">
                                         </div>
                                     </div>
                                 </div>
@@ -62,11 +68,14 @@
                                         <div class="card-body">
                                             <h4 class="card-title">Link Video Materi</h4>
                                             <h6>*Tinggalkan jika pertemuan ini tidak menggunakan link video.</h6>
-                                            <input type="input" name="video_materi" class="form-control">
+                                            <input type="input" name="video_materi" class="form-control" value="<?php foreach ($isi_materimapel as $imm): ?><?php echo $imm->video_materi; endforeach; ?>">
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <input type="submit" class="btn btn-primary" name="">
+                        </form>
 
                         </div>
                     </div>

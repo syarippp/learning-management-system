@@ -118,8 +118,12 @@ class Guru extends BaseController
             return redirect()->to("login");
         }
 
+        // $session = session();
+        // print_r($session->level == "guru");
+
         $guruModel = new GuruModel();
         $data['mapel_aktif'] = $guruModel->getMapel();
+        // $data['nama_pengajar'] = $guruModel->getNamaPengajar();
         $data['mapel_nama'] = $guruModel->getMapelNama();
 
         $header = view('guru/template/header');
@@ -167,9 +171,14 @@ class Guru extends BaseController
             return redirect()->to("login");
         }
 
+        $data['id_mat'] = $this->request->getGet('id_mat');
+        $data['id_dm'] = $this->request->getGet('id_dm');
+
+
         $guruModel = new GuruModel();
         $data['detail_mapel'] = $guruModel->getDetailMapel();
         $data['pertemuan'] = $guruModel->getPertemuanMapel();
+        $data['isi_materimapel'] = $guruModel->getMateriMapel();
 
         $materiModel = new MateriMapelModel();
         $data['materi'] = $materiModel->getMateriMapel();
@@ -249,6 +258,7 @@ class Guru extends BaseController
 
       $result = $detailmapelModel->insert([
          'id_mapel'=>$this->request->getPost("id_mapel"),
+         'id_users'=>$this->request->getPost("id_users"),
          'kelas_mapel'=>$this->request->getPost("kelas_mapel"),
          'tahun_mapel'=>$this->request->getPost("tahun_mapel"),
          'status'=>"aktif"
@@ -279,12 +289,6 @@ class Guru extends BaseController
       $id_detail_mapel = $this->request->getGet('id_dm');
       $pertemuan_materi = $this->request->getPost('pertemuan_materi');
 
-      // $mmm = $materimapelModel->countMateriMapel($id_detail_mapel);
-
-      // $data['jumlah_mapel'] = $mmm;
-
-      // print_r($data['jumlah_mapel']);
-
       $result = $materimapelModel->insert([
          'id_detail_mapel'=> $id_detail_mapel,
          'pertemuan'=>$pertemuan_materi,
@@ -313,6 +317,51 @@ class Guru extends BaseController
         }
 
    }
+
+   public function edit_materi()
+    {
+        $MateriMapelModel = new MateriMapelModel();
+
+        $id_mat = $this->request->getPost('id_mat');
+        $pendahuluan = $this->request->getPost('myTextarea');
+        $file_materi = $this->request->getFile('file_materi');
+        $video_materi = $this->request->getPost('video_materi');
+
+        // Array untuk menyimpan data yang akan diupdate
+        $data = [
+            'pendahuluan' => $pendahuluan,
+            'video_materi' => $video_materi,
+        ];
+
+        // Periksa apakah ada file yang diupload
+        if ($file_materi && $file_materi->isValid() && !$file_materi->hasMoved()) {
+            // Validasi tipe file (misalnya hanya PDF)
+            if ($file_materi->getClientMimeType() == 'application/pdf') {
+                // Tentukan nama file baru (misalnya menggunakan nama asli atau generate nama unik)
+                $newName = $file_materi->getRandomName();
+
+                // Pindahkan file ke folder tujuan (misalnya 'public/pdf')
+                if ($file_materi->move(FCPATH . 'pdf', $newName)) {
+                    // Simpan nama file ke array data
+                    $data['materi'] = $newName;
+                } else {
+                    // Handle error jika file gagal dipindahkan
+                    log_message('error', 'Failed to move the file to destination');
+                    return redirect()->back()->with('error', 'Gagal memindahkan file.');
+                }
+            } else {
+                // Handle error jika tipe file tidak sesuai
+                return redirect()->back()->with('error', 'File harus berupa PDF.');
+            }
+        }
+
+        // Update data di database
+        if ($MateriMapelModel->update($id_mat, $data)) {
+            return redirect()->back()->with('success', 'Materi berhasil diupdate.');
+        } else {
+            return redirect()->back()->with('error', 'Gagal mengupdate data.');
+        }
+    }
 
    public function hapus_materi_mapel()
     {

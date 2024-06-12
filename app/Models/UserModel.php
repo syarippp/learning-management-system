@@ -10,7 +10,7 @@ class UserModel extends Model
     protected $primaryKey = "id_users";
     protected $returnType = "object";
     protected $useTimestamps = false;
-    protected $allowedFields = ['id_users', 'username', 'password', 'level', 'alamat', 'kelas', 'no_hp'];
+    protected $allowedFields = ['nisn', 'id_users', 'username', 'password', 'level', 'alamat', 'kelas', 'no_hp', 'nama_lengkap'];
 
      public function getActiveMapels()
     {
@@ -27,16 +27,42 @@ class UserModel extends Model
             ->getResult();
     }
 
+    public function getSiswa(){
+        return $this->db->table('users')
+            ->where('level', 'siswa')
+            ->get()
+            ->getResult();
+    }
+
+    // public function getMapel()
+    // {
+    //     $id_mapel = $_GET['id'] ?? null;
+
+    //     if ($id_mapel !== null && is_numeric($id_mapel)) {
+    //         return $this->db->table('detail_mapel')
+    //                     ->join('mapel', 'mapel.id_mapel = detail_mapel.id_mapel')
+    //                     ->where('detail_mapel.status', 'aktif')
+    //                     ->where('detail_mapel.kelas_mapel', session('kelas'))
+    //                     ->where('detail_mapel.id_mapel', $id_mapel)
+    //                     ->get()
+    //                     ->getResult();
+    //     } else {
+    //         return null;
+    //     }
+    // }
+
     public function getMapel()
     {
         $id_mapel = $_GET['id'] ?? null;
+        $session = session();
 
         if ($id_mapel !== null && is_numeric($id_mapel)) {
             return $this->db->table('detail_mapel')
                         ->join('mapel', 'mapel.id_mapel = detail_mapel.id_mapel')
-                        ->where('detail_mapel.status', 'aktif')
-                        ->where('detail_mapel.kelas_mapel', session('kelas'))
                         ->where('detail_mapel.id_mapel', $id_mapel)
+                        ->where('detail_mapel.kelas_mapel', session('kelas'))
+                        ->join('users', 'detail_mapel.id_users = users.id_users')
+                        ->where('detail_mapel.status', 'aktif')
                         ->get()
                         ->getResult();
         } else {

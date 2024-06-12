@@ -579,6 +579,22 @@
     ***********************************-->
 
     <script>
+        document.getElementById('manualButton').addEventListener('click', function() {
+            window.location.href = 'link_to_manual_page'; // Replace with your actual link
+        });
+
+        document.getElementById('importButton').addEventListener('click', function() {
+            document.getElementById('options').classList.add('d-none');
+            document.getElementById('importForm').classList.remove('d-none');
+        });
+
+        document.getElementById('backButton').addEventListener('click', function() {
+            document.getElementById('importForm').classList.add('d-none');
+            document.getElementById('options').classList.remove('d-none');
+        });
+    </script>
+
+    <script>
         function goBack() {
             // Ambil URL referer dari header HTTP_REFERER
             var referer = document.referrer;

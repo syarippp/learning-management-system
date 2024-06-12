@@ -10,7 +10,7 @@ class DetailMapelModel extends Model
     protected $primaryKey = "id_detail_mapel";
     protected $returnType = "object";
     protected $useTimestamps = false;
-    protected $allowedFields = ['id_detail_mapel', 'id_mapel', 'kelas_mapel', 'tahun_mapel', 'status'];
+    protected $allowedFields = ['id_detail_mapel', 'id_mapel', 'id_users', 'kelas_mapel', 'tahun_mapel', 'status'];
 
     public function update_status_mapel($iddetailmapel, $data)
     {

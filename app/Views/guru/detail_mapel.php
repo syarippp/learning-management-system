@@ -27,7 +27,7 @@
 
                                     <?php if (session()->getFlashKeys()): ?>
                                         <?php echo session()->getFlashdata('berhasiltambahdetailmapel'); ?>
-                                <?php endif; ?>
+                                    <?php endif; ?>
 
                                     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -35,8 +35,7 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="exampleModalLabel">Tambah Mapel Baru</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                                            aria-hidden="true">&times;</span>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
@@ -45,13 +44,31 @@
                                                             <label for="recipient-name" class="col-form-label">Nama Mapel:</label>
                                                             <input type="text" class="form-control" id="recipient-name" name="nama_mapel" value="<?php foreach ($mapel_nama as $mn): echo $mn->nama_mapel; ?> <?php endforeach; ?>" readonly="">
                                                             <input type="text" class="form-control" id="recipient-name" name="id_mapel" value="<?php foreach ($mapel_nama as $mn): echo $mn->id_mapel; ?> <?php endforeach; ?>" hidden>
+
+                                                            <input type="text" class="form-control" id="recipient-name" name="id_users" value="<?php echo session('id_users'); ?>" hidden>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="recipient-name" class="col-form-label">Nama Pengajar:</label>
+                                                            <input type="text" class="form-control" id="recipient-name" name="nama_mapel" value="<?php echo session('nama_lengkap'); ?>" readonly=""> 
+
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="recipient-name" class="col-form-label">Kelas:</label>
                                                             <select name="kelas_mapel" class="form-control">
-                                                                <option value="10">10</option>
-                                                                <option value="11">11</option>
-                                                                <option value="12">12</option>
+                                                                <option value="X TKJ A">X TKJ A</option>
+                                                                <option value="X TKJ B">X TKJ B</option>
+                                                                <option value="X TKJ C">X TKJ C</option>
+                                                                <option value="X TKJ D">X TKJ D</option>
+
+                                                                <option value="XI TKJ A">XI TKJ A</option>
+                                                                <option value="XI TKJ B">XI TKJ B</option>
+                                                                <option value="XI TKJ C">XI TKJ C</option>
+                                                                <option value="XI TKJ D">XI TKJ D</option>
+
+                                                                <option value="XII TKJ A">XII TKJ A</option>
+                                                                <option value="XII TKJ B">XII TKJ B</option>
+                                                                <option value="XII TKJ C">XII TKJ C</option>
+                                                                <option value="XII TKJ D">XII TKJ D</option>
                                                             </select>
                                                         </div>
                                                         <div class="form-group">
@@ -79,7 +96,8 @@
                                             <th width="400">Nama Mapel</th>
                                             <th width="150">Kelas Mapel</th>
                                             <th width="150">Tahun Mapel</th>
-                                            <th><center>Aksi</center></th>
+                                            <!-- <th>Pengajar</th> -->
+                                            <th width="400"><center>Aksi</center></th>
                                             <th><center>Status</center></th>
                                     </thead>
 
@@ -91,6 +109,7 @@
                                             <td><?php echo $ma->nama_mapel; ?></td>
                                             <td><center><?php echo $ma->kelas_mapel; ?></center></td>
                                             <td><center><?php echo $ma->tahun_mapel; ?></center></td>
+                                            <!-- <td><center><?php echo $ma->nama_lengkap; ?></center></td> -->
                                             <td width="800">
                                                 <center>
                                                 <a href="<?= base_url('guru/akses_mapel?id_dm='.$ma->id_detail_mapel.''); ?>">
@@ -130,6 +149,7 @@
                                             <th>Nama Mapel</th>
                                             <th>Kelas Mapel</th>
                                             <th>Tahun Mapel</th>
+                                            <!-- <th>Pengajar</th> -->
                                             <th><center>Aksi</center></th>
                                             <th><center>Status</center></th>
                                         </tr>

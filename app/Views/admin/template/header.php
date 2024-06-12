@@ -169,7 +169,7 @@
                         </li> -->
                         <li class="icons">
                             <a href="javascript:void(0)" class="log-user">
-                                <img src="<?= base_url() ?>profil_picture/pp.jpg" alt=""> <span><?php echo session('nama_lengkap'); ?></span>  <i class="fa fa-caret-down f-s-14" aria-hidden="true"></i>
+                                <img src="<?= base_url() ?>profil_picture/pp.jpg" alt=""> <span>Super Admin</span>  <i class="fa fa-caret-down f-s-14" aria-hidden="true"></i>
                             </a>
                             <div class="drop-down dropdown-profile animated bounceInDown">
                                 <div class="dropdown-content-body">
@@ -198,20 +198,25 @@
                 <ul class="metismenu" id="menu">
                     <li class="nav-label">Dashboard</li>
                     <li class="mega-menu mega-menu-lg">
-                        <a href="<?php echo base_url('guru/index'); ?>">
+                        <a href="<?php echo base_url('admin/index'); ?>">
                             <i class="mdi mdi-view-dashboard"></i><span class="nav-text">Dashboard</span>
                         </a>
                     </li>
                     <li class="mega-menu mega-menu-lg">
-                        <a href="<?php echo base_url('guru/mapel'); ?>">
-                            <i class="mdi mdi-view-list"></i><span class="nav-text">Mata Pelajaran</span>
+                        <a href="<?php echo base_url('admin/data_mapel'); ?>">
+                            <i class="mdi mdi-book"></i><span class="nav-text">Data Mapel</span>
                         </a>
                     </li>
-                    <li class="mega-menu mega-menu-lg">
-                        <a href="<?php echo base_url('guru/profil'); ?>">
-                            <i class="mdi mdi-account-settings-variant"></i><span class="nav-text">Profile</span>
-                        </a>
+                    <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i class="mdi mdi-account-multiple"></i><span class="nav-text">Data Guru & Siswa</span> <span class="badge bg-dpink text-white nav-badge">02</span></a>
+                        <ul aria-expanded="false">
+                            <li><a href="<?php echo base_url('admin/data_guru'); ?>">Data Guru</a>
+                            </li>
+                            <li><a href="<?php echo base_url('admin/data_siswa'); ?>">Data Siswa</a>
+                            </li>
+                        </ul>
                     </li>
+                    
+
                 </ul>
             </div>
         </div>

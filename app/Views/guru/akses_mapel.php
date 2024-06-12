@@ -71,7 +71,10 @@
                                             <h3 class="card-title">Pertemuan <?php echo $pert->pertemuan; ?></h3>
                                             <p class="card-text">Jangan lupa edit materi setelah menambah pertemuan baru.</p>
                                                 <a href="<?= base_url('guru/akses_materi?id_mat='.$pert->id_materi_mapel.'&id_dm='.$pert->id_detail_mapel.'') ?>" class="btn btn-card btn-warning">Edit Materi</a>
-                                                <a href="<?= base_url('guru/hapus_materi_mapel?id_mat='.$pert->id_materi_mapel.'') ?>" class="btn btn-card btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus pertemuan?')">Hapus Pertemuan</a>
+                                                <a href="#" class="btn btn-card btn-warning">Post Test</a>
+                                                <a href="<?= base_url('guru/hapus_materi_mapel?id_mat='.$pert->id_materi_mapel.'') ?>" class="btn btn-card btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus pertemuan?')">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
                                         </div>
                                     </div>
                                 </div>

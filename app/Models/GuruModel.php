@@ -12,6 +12,13 @@ class GuruModel extends Model
     protected $useTimestamps = false;
     protected $allowedFields = ['id_users', 'username', 'password', 'level', 'alamat', 'kelas', 'no_hp'];
 
+    public function getGuru(){
+        return $this->db->table('users')
+            ->where('level', 'guru')
+            ->get()
+            ->getResult();
+    }
+
     public function getActiveMapels()
     {
         return $this->db->table('mapel')
@@ -63,17 +70,38 @@ class GuruModel extends Model
     public function getMapel()
     {
         $id_mapel = $_GET['id'] ?? null;
+        $session = session();
 
         if ($id_mapel !== null && is_numeric($id_mapel)) {
             return $this->db->table('detail_mapel')
                         ->join('mapel', 'mapel.id_mapel = detail_mapel.id_mapel')
                         ->where('detail_mapel.id_mapel', $id_mapel)
+                        ->join('users', 'detail_mapel.id_users = users.id_users')
+                        ->where('users.id_users', $session->id_users)
                         ->get()
                         ->getResult();
         } else {
             return null;
         }
     }
+
+    // public function getNamaPengajar()
+    // {
+    //     $id_mapel = $_GET['id'] ?? null;
+    //     $session = session();
+        
+    //     if ($id_mapel !== null && is_numeric($id_mapel)) {
+    //         return $this->db->table('detail_mapel')
+    //                     ->join('mapel', 'mapel.id_mapel = detail_mapel.id_mapel')
+    //                     ->where('detail_mapel.id_mapel', $id_mapel)
+    //                     ->join('users', 'detail_mapel.id_users = users.id_users')
+    //                     ->where('users.id_users', $session->id_users)
+    //                     ->get()
+    //                     ->getFirstRow(); // Mengambil hanya satu hasil
+    //     } else {
+    //         return null;
+    //     }
+    // }
 
     public function getMapelNama()
     {
@@ -111,6 +139,22 @@ class GuruModel extends Model
         if ($id_mapel !== null && is_numeric($id_mapel)) {
             return $this->db->table('materi_mapel')
                 ->where('id_detail_mapel', $id_mapel)
+                ->get()
+                ->getResult();
+        } else {
+            return null;
+        }
+    }
+
+    public function getMateriMapel()
+    {
+        $id_mapel = $_GET['id_dm'] ?? null;
+        $id_mat = $_GET['id_mat'] ?? null;
+
+        if ($id_mapel !== null && is_numeric($id_mapel)) {
+            return $this->db->table('materi_mapel')
+                ->where('id_detail_mapel', $id_mapel)
+                ->where('id_materi_mapel', $id_mat)
                 ->get()
                 ->getResult();
         } else {

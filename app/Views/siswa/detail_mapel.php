@@ -25,9 +25,10 @@
                                     <thead>
                                         <tr>
                                             <th width="50">No</th>
-                                            <th width="400">Nama Mapel</th>
+                                            <th width="300">Nama Mapel</th>
                                             <th width="150">Kelas Mapel</th>
                                             <th width="150">Tahun Mapel</th>
+                                            <th width="150">Pengajar</th>
                                             <th><center>Aksi</center></th>
                                     </thead>
 
@@ -39,6 +40,7 @@
                                             <td><?php echo $ma->nama_mapel; ?></td>
                                             <td><center><?php echo $ma->kelas_mapel; ?></center></td>
                                             <td><center><?php echo $ma->tahun_mapel; ?></center></td>
+                                            <td><center><?php echo $ma->nama_lengkap; ?></center></td>
                                             <td><center><a href="<?= base_url('siswa/akses_mapel?id_dm='.$ma->id_detail_mapel.''); ?>"><button type="button" class="btn btn-success">Akses Mapel <span class="btn-icon-right"><i
                                                 class="fa fa-arrow-circle-right "></i></span>
                                             </button></a></center></td>
@@ -55,6 +57,7 @@
                                             <th>Nama Mapel</th>
                                             <th>Kelas Mapel</th>
                                             <th>Tahun Mapel</th>
+                                            <th>Pengajar</th>
                                             <th><center>Aksi</center></th>
                                         </tr>
                                     </tfoot>
