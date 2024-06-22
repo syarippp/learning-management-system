@@ -29,7 +29,10 @@
                                     <?php if (session()->getFlashKeys()): ?>
                                         <?php echo session()->getFlashdata('berhasiltambahmaterimapel'); ?>
                                         <?php echo session()->getFlashdata('berhasilhapusmaterimapel'); ?>
-                                <?php endif; ?>
+                                        <?php echo session()->getFlashdata('berhasilbuat_posttest'); ?>
+                                        <?php echo session()->getFlashdata('gagalbuat_posttest'); ?>
+                                        <?php echo session()->getFlashdata('berhasilhapusposttest'); ?>
+                                    <?php endif; ?>
 
                                 <button type="submit" class="btn btn-success" data-toggle="modal" data-target="#exampleModal"
                                         data-whatever="@mdo">Tambah Pertemuan Baru<span class="btn-icon-right"><i class="fa fa-plus "></i></span>
@@ -63,6 +66,13 @@
 
                             <div class="row">
                                 
+                                <style>
+                                    .btn-card {
+                                        display: block;
+                                        width: 100%;
+                                        margin-bottom: 10px;
+                                    }
+                                </style>
 
                                 <?php foreach ($pertemuan as $pert): ?>
                                 <div class="col-lg-6 mt-4">
@@ -70,11 +80,26 @@
                                         <div class="card-body">
                                             <h3 class="card-title">Pertemuan <?php echo $pert->pertemuan; ?></h3>
                                             <p class="card-text">Jangan lupa edit materi setelah menambah pertemuan baru.</p>
-                                                <a href="<?= base_url('guru/akses_materi?id_mat='.$pert->id_materi_mapel.'&id_dm='.$pert->id_detail_mapel.'') ?>" class="btn btn-card btn-warning">Edit Materi</a>
-                                                <a href="#" class="btn btn-card btn-warning">Post Test</a>
-                                                <a href="<?= base_url('guru/hapus_materi_mapel?id_mat='.$pert->id_materi_mapel.'') ?>" class="btn btn-card btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus pertemuan?')">
-                                                    <i class="fa fa-trash"></i>
-                                                </a>
+                                            <div class="row">
+                                                <div class="col-4 p-1">
+                                                    <a href="<?= base_url('guru/akses_materi?id_mat='.$pert->id_materi_mapel.'&id_dm='.$pert->id_detail_mapel.'') ?>" class="btn btn-warning btn-sm w-100"><i class="fa fa-pencil"></i> Edit</a>
+                                                </div>
+                                                <div class="col-4 p-1">
+                                                    <?php
+                                                        if ($pert->post_test == "Tidak Ada") {
+                                                            echo '<a href="' . base_url("guru/buat_posttest?id_mat=" . $pert->id_materi_mapel . "&id_dm=" . $pert->id_detail_mapel) . '" class="btn btn-info btn-sm w-100"><i class="fa fa-pencil"></i> Buat</a>';
+                                                        } else {
+                                                            echo '<a href="' . base_url("guru/lihat_posttest?id_mat=" . $pert->id_materi_mapel . "&id_dm=" . $pert->id_detail_mapel).'" class="btn btn-primary btn-sm w-100"><i class="fa fa-list"></i> Lihat</a>';
+                                                        }
+                                                    ?>
+                                                </div>
+                                                <div class="col-4 p-1">
+                                                    <a href="<?= base_url('guru/hapus_materi_mapel?id_mat='.$pert->id_materi_mapel.'') ?>" class="btn btn-danger btn-sm w-100" onclick="return confirm('Apakah anda yakin ingin menghapus pertemuan?')">
+                                                        <i class="fa fa-trash"></i> Hapus
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <input type="text" name="id_dm" value="<?php echo $pert->id_materi_mapel; ?>" hidden>
                                         </div>
                                     </div>
                                 </div>

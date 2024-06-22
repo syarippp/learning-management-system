@@ -19,6 +19,12 @@ class MapelModel extends Model
             ->getResult();
     }
 
+    public function countActiveMapels()
+    {
+        return $this->db->table('detail_mapel')
+            ->countAllResults();
+    }
+
     public function getMapelWithID()
     {
     	$id_mapel = $_GET['id_mapel'] ?? null;

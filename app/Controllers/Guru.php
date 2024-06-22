@@ -6,6 +6,8 @@ use App\Models\UserModel;
 use App\Models\DetailMapelModel;
 use App\Models\MapelModel;
 use App\Models\MateriMapelModel;
+use App\Models\Pertanyaan;
+use App\Models\Jawaban;
 
 class Guru extends BaseController
 {
@@ -147,6 +149,7 @@ class Guru extends BaseController
         }
 
         $guruModel = new GuruModel();
+        $MateriMapelModel = new MateriMapelModel();
         $data['detail_mapel'] = $guruModel->getDetailMapel();
         $data['pertemuan'] = $guruModel->getPertemuanMapel();
         // print_r($data['detail_mapel']);
@@ -157,6 +160,137 @@ class Guru extends BaseController
         $fullView = $header . $mainContent . $footer;
 
         return $this->response->setBody($fullView);
+    }
+
+    public function lihat_posttest()
+    {
+        // Check if user is logged in
+        if (!$this->isLoggedIn()) {
+            $session = session();
+            $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
+                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span>
+                                        </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
+            return redirect()->to("login");
+        }
+
+        $guruModel = new GuruModel();
+        $Pertanyaan = new Pertanyaan();
+        $data['detail_mapel'] = $guruModel->getDetailMapel();
+        $data['pertemuan'] = $guruModel->getPertemuanMapel();
+        $data['per'] = $guruModel->getPert();
+
+        $data['lihat_jawaban'] = $Pertanyaan->LihatJawaban();
+        $data['lihat_pertanyaan'] = $Pertanyaan->LihatPertanyaan();
+
+        $header = view('guru/template/header');
+        $mainContent = view('guru/lihat_posttest', $data);
+        $footer = view('guru/template/footer');
+        $fullView = $header . $mainContent . $footer;
+
+        return $this->response->setBody($fullView);
+    }
+
+    public function buat_posttest()
+    {
+        // Check if user is logged in
+        if (!$this->isLoggedIn()) {
+            $session = session();
+            $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
+                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span>
+                                        </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
+            return redirect()->to("login");
+        }
+
+        $guruModel = new GuruModel();
+        $data['detail_mapel'] = $guruModel->getDetailMapel();
+        $data['pertemuan'] = $guruModel->getPertemuanMapel();
+        $data['per'] = $guruModel->getPert();
+        // print_r($data['detail_mapel']);
+
+        $header = view('guru/template/header');
+        $mainContent = view('guru/buat_posttest', $data);
+        $footer = view('guru/template/footer');
+        $fullView = $header . $mainContent . $footer;
+
+        return $this->response->setBody($fullView);
+    }
+
+    public function proses_posttest() {
+        $Pertanyaan = new Pertanyaan();
+        $Jawaban = new Jawaban();
+        $MateriMapelModel = new MateriMapelModel();
+        $session = session();
+        $id_mat = $this->request->getGet('id_mat');
+        $id_dm = $this->request->getGet('id_dm');
+        $update_ada_posttest = $MateriMapelModel->find($id_mat);
+
+        // Inisialisasi variabel untuk menyimpan status hasil insert
+        $insertPertanyaanSuccess = true;
+        $pertanyaanIds = [];
+
+        // Loop untuk menyisipkan setiap pertanyaan
+        for ($i = 1; $i <= 10; $i++) {
+            $pertanyaan = $this->request->getPost("pertanyaan$i");
+            $result = $Pertanyaan->insert([
+                'id_materi_mapel' => $id_mat,
+                'pertanyaan' => $pertanyaan
+            ]);
+
+            // Jika ada kegagalan dalam insert, set flag menjadi false
+            if ($result) {
+                $pertanyaanIds[$i] = $Pertanyaan->insertID(); // Asumsi Pertanyaan->insertID() mengembalikan ID dari pertanyaan yang baru disisipkan
+            } else {
+                $insertPertanyaanSuccess = false;
+                break;
+            }
+        }
+
+        // Jika semua pertanyaan berhasil disisipkan, lanjut ke jawaban
+        if ($insertPertanyaanSuccess) {
+            $insertJawabanSuccess = true;
+            $options = ['a', 'b', 'c', 'd']; // Huruf untuk opsi jawaban
+
+            for ($p = 1; $p <= 10; $p++) {
+                for ($i = 0; $i < 4; $i++) {
+                    $option = $options[$i];
+                    $jawaban = $this->request->getPost("jawaban_{$p}{$option}");
+                    $value = ($this->request->getPost("jawabanbenar_$p") == ($i + 1)) ? TRUE : FALSE;
+
+                    $result = $Jawaban->insert([
+                        'id_pertanyaan' => $pertanyaanIds[$p],
+                        'jawaban' => $jawaban,
+                        'value' => $value
+                    ]);
+
+                    // Jika ada kegagalan dalam insert jawaban, set flag menjadi false dan break
+                    if (!$result) {
+                        $insertJawabanSuccess = false;
+                        break 2; // Break kedua loop
+                    }
+                }
+            }
+
+            if ($insertJawabanSuccess) {
+                // Update the fetched record's data and save it
+                $update_ada_posttest->post_test = "Ada";
+                $MateriMapelModel->save($update_ada_posttest);
+
+                $session->setFlashdata('berhasilbuat_posttest', '<div class="alert alert-success alert-dismissible fade show">
+                                            <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                                                    aria-hidden="true">&times;</span>
+                                            </button> <strong>Selamat!</strong> Post Test berhasil dibuat.</div>');
+                return redirect()->to("guru/akses_mapel?id_dm=".$id_dm);
+            }
+        }
+
+        // Jika ada kegagalan, tampilkan pesan error
+        $session->setFlashdata('gagalbuat_posttest', '<div class="alert alert-danger">
+                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                          <i class="icon-line-lock"></i>Maaf! Post Test Gagal Dibuat.<br>Silahkan Coba Lagi.</a>
+                        </div>');
+        return redirect()->to("guru/mapel");
     }
 
     public function akses_materi()
@@ -360,6 +494,44 @@ class Guru extends BaseController
             return redirect()->back()->with('success', 'Materi berhasil diupdate.');
         } else {
             return redirect()->back()->with('error', 'Gagal mengupdate data.');
+        }
+    }
+
+    public function hapus_posttest()
+    {
+        // Ambil nilai id_materi_mapel dari request
+        $id_materi_mapel = $this->request->getGet('id_mat');
+
+        // Buat instance dari model Pertanyaan
+        $Pertanyaan = new Pertanyaan();
+        $MateriMapelModel = new MateriMapelModel();
+
+        // Cari semua pertanyaan yang memiliki id_materi_mapel
+        $pertanyaanList = $Pertanyaan->where('id_materi_mapel', $id_materi_mapel)->findAll();
+
+        $update_ada_posttest = $MateriMapelModel->find($id_materi_mapel);
+
+        if (!empty($pertanyaanList)) {
+            // Hapus semua pertanyaan yang memiliki id_materi_mapel
+            $Pertanyaan->where('id_materi_mapel', $id_materi_mapel)->delete();
+
+            $update_ada_posttest->post_test = "Tidak Ada";
+            $MateriMapelModel->save($update_ada_posttest);
+
+            // Set session flashdata untuk menampilkan pesan sukses
+            $session = session();
+            $session->setFlashdata('berhasilhapusposttest', '<div class="alert alert-warning alert-dismissible fade show">
+                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span>
+                                        </button> <strong>Selamat!</strong> Post Test berhasil di hapus.</div>');
+
+            // Dapatkan referer dari server untuk mengarahkan kembali ke halaman sebelumnya
+            $referer = $this->request->getServer('HTTP_REFERER');
+            return redirect()->to($referer);
+        } else {
+            // Jika tidak ada pertanyaan yang ditemukan, arahkan kembali ke halaman sebelumnya
+            $referer = $this->request->getServer('HTTP_REFERER');
+            return redirect()->to($referer);
         }
     }
 

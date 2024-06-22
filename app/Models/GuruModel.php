@@ -146,6 +146,20 @@ class GuruModel extends Model
         }
     }
 
+    public function getPert()
+    {
+        $id_mat = $_GET['id_mat'] ?? null;
+
+        if ($id_mat !== null && is_numeric($id_mat)) {
+            return $this->db->table('materi_mapel')
+                ->where('id_materi_mapel', $id_mat)
+                ->get()
+                ->getResult();
+        } else {
+            return null;
+        }
+    }
+
     public function getMateriMapel()
     {
         $id_mapel = $_GET['id_dm'] ?? null;

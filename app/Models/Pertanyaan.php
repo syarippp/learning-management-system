@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Models;
+
+use CodeIgniter\Model;
+
+class Pertanyaan extends Model
+{
+    protected $table = "pertanyaan";
+    protected $primaryKey = "id_pertanyaan";
+    protected $returnType = "object";
+    protected $useTimestamps = false;
+    protected $allowedFields = ['id_pertanyaan', 'id_materi_mapel', 'pertanyaan'];
+
+    public function getPertanyaan(){
+
+        $id_mat = $_GET['id_mat'] ?? null;
+
+        return $this->db->table('pertanyaan')
+            ->where('id_materi_mapel', $id_mat)
+            ->get()
+            ->getResult();
+    }
+
+    public function LihatJawaban()
+    {
+
+        $id_mat = $_GET['id_mat'] ?? null;
+
+        return $this->db->table('pertanyaan')
+                        ->select('*')
+                        ->join('jawaban', 'pertanyaan.id_pertanyaan = jawaban.id_pertanyaan')
+                        ->where('pertanyaan.id_materi_mapel', $id_mat)
+                        ->get()
+                        ->getResult();
+    }
+
+    public function LihatPertanyaan()
+    {
+
+        $id_mat = $_GET['id_mat'] ?? null;
+        
+        return $this->db->table('pertanyaan')
+                        ->select('*')
+                        ->where('pertanyaan.id_materi_mapel', $id_mat)
+                        ->get()
+                        ->getResult();
+    }
+}

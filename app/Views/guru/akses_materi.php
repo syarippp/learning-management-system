@@ -24,7 +24,7 @@
                                 <h2><?php foreach ($detail_mapel as $dm): ?><?php echo "Materi ".$dm->nama_mapel; endforeach; ?><span class="text-primary"><?php foreach ($detail_mapel as $dm): ?><?php echo "Kelas ".$dm->kelas_mapel; endforeach; ?><?php foreach ($materi as $mat): echo " - Pertemuan ".$mat->pertemuan."";?><?php endforeach; ?></span></h2>
                             </div>
 
-                            <button type="button" class="btn btn-primary" onclick="goBack()">Kembali<span class="btn-icon-right"><i class="fa fa-arrow-left "></i></span></button>
+                            <a href="<?= base_url('guru/akses_mapel?id_dm='.$id_dm) ?>"><button type="button" class="btn btn-primary">Kembali<span class="btn-icon-right"><i class="fa fa-arrow-left "></i></span></button></a>
 
                                     <div class="mt-3"></div>
 
