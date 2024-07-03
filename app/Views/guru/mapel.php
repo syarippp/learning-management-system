@@ -19,9 +19,9 @@
                 <div class="row">
                     <div class="col-12">
 
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal"
+                        <!-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal"
                                         data-whatever="@mdo">Tambah Mapel Baru<span class="btn-icon-right"><i class="fa fa-plus "></i></span>
-                                    </button>
+                                    </button> -->
 
                                     <div class="mt-3"></div>
                                     <?php if (session()->getFlashKeys()): ?>

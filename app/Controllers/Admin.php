@@ -115,6 +115,26 @@ class Admin extends BaseController
         return $this->response->setBody($fullView);
     }
 
+    public function tambah_siswa()
+    {
+        // Check if user is logged in
+        if (!$this->isLoggedIn()) {
+            $session = session();
+            $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
+                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span>
+                                        </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
+            return redirect()->to("login");
+        }
+
+        $header = view('admin/template/header');
+        $mainContent = view('admin/tambah_siswa');
+        $footer = view('admin/template/footer');
+        $fullView = $header . $mainContent . $footer;
+
+        return $this->response->setBody($fullView);
+    }
+
     public function edit_mapel()
     {
         // Check if user is logged in
@@ -196,15 +216,59 @@ class Admin extends BaseController
 	                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 	                          <i class="icon-line-lock"></i>Selamat! Akun Berhasil Dibuat.<br>Silahkan Login.</a>
 	                        </div>');
-	            return redirect()->to("admin/tambah_guru");
+	            return redirect()->to("admin/data_guru");
 	        }else{
 	            $session = session();
 	            $session->setFlashdata('gagalbuatakun', '<div class="alert alert-danger">
 	                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 	                          <i class="icon-line-lock"></i>Maaf! Akun Gagal Dibuat.<br>Silahkan Coba Lagi.</a>
 	                        </div>');
-	            return redirect()->to("admin/tambah_guru");
+	            return redirect()->to("admin/data_guru");
 	        }
+    }
+
+    public function proses_tambah_siswa(){
+        // Check if user is logged in
+        if (!$this->isLoggedIn()) {
+            $session = session();
+            $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
+                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span>
+                                        </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
+            return redirect()->to("login");
+        }
+
+        $usermodel = new UserModel();
+
+          $plainPassword = $this->request->getPost("password");
+          $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
+
+          $result = $usermodel->insert([
+             'username'=>$this->request->getPost("username"),
+             'password'=> $hashedPassword,
+             'nama_lengkap'=>$this->request->getPost("nama_lengkap"),
+             'nisn'=>$this->request->getPost("nisn"),
+             'no_hp'=>$this->request->getPost("no_hp"),
+             'alamat'=>$this->request->getPost("alamat"),
+             'kelas'=>$this->request->getPost("kelas"),
+             'level' => 'siswa'
+          ]);
+
+          if($result==true) {
+                $session = session();
+                $session->setFlashdata('berhasilbuatakun', '<div class="alert alert-success">
+                              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                              <i class="icon-line-lock"></i>Selamat! Akun Berhasil Dibuat.<br>Silahkan Login.</a>
+                            </div>');
+                return redirect()->to("admin/data_siswa");
+            }else{
+                $session = session();
+                $session->setFlashdata('gagalbuatakun', '<div class="alert alert-danger">
+                              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                              <i class="icon-line-lock"></i>Maaf! Akun Gagal Dibuat.<br>Silahkan Coba Lagi.</a>
+                            </div>');
+                return redirect()->to("admin/data_siswa");
+            }
     }
 
     public function data_mapel()

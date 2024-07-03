@@ -72,9 +72,10 @@
                                     <div class="card ribbons-card ribbon-bookmarked">
                                         <div class="card-body pl-0">
                                             <div class="ribbon ribbon-style-8">Post Test</div>
-                                            <p>A small river named Duden flows by their place and supplies it with the necessary
-                                                regelialia. It is a paradisematic country.</p>
+                                            <p>Silahkan mengerjakan Post Test dengan klik tombol post test dibawah</p>
+                                            <a href="post_test?id_mat=<?= esc($id_mat); ?>">
                                                 <button type="button" class="btn btn-sl-sm btn-danger">Kerjakan</button>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

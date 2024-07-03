@@ -2,18 +2,90 @@
 
 namespace App\Controllers;
 use App\Models\UserModel;
+use App\Models\Pertanyaan;
+use App\Models\Jawaban;
 
 class Siswa extends BaseController
 {
 
 	protected $session;
     protected $db;
+    protected $Pertanyaan; // Properti Pertanyaan ditambahkan di sini
+    protected $Jawaban; // Properti Jawaban ditambahkan di sini
 
     public function __construct()
     {
         $this->session = session();
         $this->db = \Config\Database::connect();
         $this->session = \Config\Services::session();
+        $this->Pertanyaan = new Pertanyaan(); // Inisialisasi model Pertanyaan
+        $this->Jawaban = new Jawaban(); // Inisialisasi model Jawaban
+    }
+
+    public function getJawabanByPertanyaan($id_pertanyaan)
+    {
+        $jawaban = $this->Jawaban->getJawabanByPertanyaan($id_pertanyaan);
+        return $this->response->setJSON($jawaban);
+    }
+
+    public function post_test()
+    {
+        if (!$this->isLoggedIn()) {
+            $this->session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
+                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
+            return redirect()->to("login");
+        }
+
+        $userModel = new UserModel();
+        $data['materi_mapel'] = $userModel->getDetailMateri();
+        $data['id_mat'] = $this->request->getGet('id_mat');
+
+
+        $Pertanyaan = new Pertanyaan();
+        $id_mat = $this->request->getGet('id_mat');
+        $data['pertanyaan'] = $Pertanyaan->getPertanyaan($id_mat);
+        $data['jawaban'] = $Pertanyaan->getJawabanByMateriMapel($id_mat);
+
+
+        $header = view('siswa/template/header');
+        $mainContent = view('siswa/post_test', $data);
+        $footer = view('siswa/template/footer');
+        $fullView = $header . $mainContent . $footer;
+
+        return $this->response->setBody($fullView);
+    }
+
+    public function lihat_posttest()
+    {
+        // Check if user is logged in
+        if (!$this->isLoggedIn()) {
+            $session = session();
+            $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
+                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span>
+                                        </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
+            return redirect()->to("login");
+        }
+
+        $data['id_dm'] = $this->request->getGet('id_dm');
+        $data['id_mat'] = $this->request->getGet('id_mat');
+
+        $guruModel = new GuruModel();
+        $Pertanyaan = new Pertanyaan();
+        $data['detail_mapel'] = $guruModel->getDetailMapel();
+        $data['pertemuan'] = $guruModel->getPertemuanMapel();
+        $data['per'] = $guruModel->getPert();
+
+        $data['lihat_jawaban'] = $Pertanyaan->LihatJawaban();
+        $data['lihat_pertanyaan'] = $Pertanyaan->LihatPertanyaan();
+
+        $header = view('guru/template/header');
+        $mainContent = view('guru/lihat_posttest', $data);
+        $footer = view('guru/template/footer');
+        $fullView = $header . $mainContent . $footer;
+
+        return $this->response->setBody($fullView);
     }
 
     private function isLoggedIn()
@@ -138,6 +210,7 @@ class Siswa extends BaseController
 
         $userModel = new UserModel();
         $data['materi_mapel'] = $userModel->getDetailMateri();
+        $data['id_mat'] = $this->request->getGet('id_mat');
 
         $header = view('siswa/template/header');
         $mainContent = view('siswa/materi_pertemuan', $data);

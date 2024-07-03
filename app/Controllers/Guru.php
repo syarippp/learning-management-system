@@ -174,6 +174,9 @@ class Guru extends BaseController
             return redirect()->to("login");
         }
 
+        $data['id_dm'] = $this->request->getGet('id_dm');
+        $data['id_mat'] = $this->request->getGet('id_mat');
+
         $guruModel = new GuruModel();
         $Pertanyaan = new Pertanyaan();
         $data['detail_mapel'] = $guruModel->getDetailMapel();
@@ -497,10 +500,179 @@ class Guru extends BaseController
         }
     }
 
+    public function updateJawaban($dataJawaban)
+    {
+        // Model instance untuk Jawaban
+        $Jawaban = new Jawaban();
+
+        // Iterasi melalui array data jawaban
+        foreach ($dataJawaban as $jawaban) {
+            // Panggil metode update dari model Jawaban
+            $result = $Jawaban->update(
+                // ID jawaban yang akan diperbarui
+                $jawaban['id_jawaban'],
+                // Data jawaban baru yang akan diupdate
+                [
+                    'jawaban' => $jawaban['jawaban'], // teks jawaban baru
+                    'value' => $jawaban['value'] // nilai jawaban baru
+                ]
+            );
+
+            // Periksa apakah pembaruan berhasil
+            if (!$result) {
+                // Jika gagal, keluarkan pesan kesalahan
+                echo "Gagal memperbarui jawaban dengan ID: " . $jawaban['id_jawaban'];
+                exit;
+            }
+        }
+    }
+
+    // public function edit_posttest()
+    // {
+    //     // Model instances
+    //     $Pertanyaan = new Pertanyaan();
+    //     $Jawaban = new Jawaban();
+
+    //     $id_dm = $this->request->getGet('id_dm');
+    //     $id_mat = $this->request->getGet('id_mat');
+
+    //     // Array untuk menyimpan data pertanyaan dan jawaban
+    //     $pertanyaanData = [];
+    //     $jawabanData = [];
+
+    //     // Kumpulkan dan validasi data pertanyaan (10 pertanyaan)
+    //     for ($i = 0; $i < 10; $i++) {
+    //         $idPertanyaan = $this->request->getPost('idp' . $i);
+    //         $pertanyaanText = $this->request->getPost('pertanyaan' . $i);
+
+    //         if ($idPertanyaan && $pertanyaanText) {
+    //             $pertanyaanData[] = [
+    //                 'id_pertanyaan' => $idPertanyaan,
+    //                 'pertanyaan' => $pertanyaanText
+    //             ];
+    //         }
+    //     }
+
+    //     // Kumpulkan dan validasi data jawaban (40 jawaban, 4 jawaban untuk setiap 10 pertanyaan)
+    //     for ($i = 0; $i < 10; $i++) {
+    //         // Inisialisasi flag untuk menandai apakah jawaban benar sudah ditemukan
+    //         $correctAnswerFound = false;
+
+    //         for ($j = 0; $j < 4; $j++) {
+    //             $idJawaban = $this->request->getPost('idj' . ($i * 4 + $j));
+    //             $jawabanText = $this->request->getPost('jawaban_' . $i . chr(97 + $j)); // chr(97) adalah 'a', chr(98) adalah 'b', dst.
+    //             $isCorrect = ($this->request->getPost('jawabanbenar_' . $i) == $j) ? 1 : 0;
+
+    //             if ($idJawaban && $jawabanText) {
+    //                 // Jika jawaban ini adalah jawaban benar
+    //                 if ($isCorrect) {
+    //                     // Atur nilai value menjadi 1
+    //                     $jawabanData[] = [
+    //                         'id_jawaban' => $idJawaban,
+    //                         'jawaban' => $jawabanText,
+    //                         'value' => 1 // Nilai jawaban benar
+    //                     ];
+    //                     // Set flag untuk menandai bahwa jawaban benar sudah ditemukan
+    //                     $correctAnswerFound = true;
+    //                 } else {
+    //                     // Jika jawaban ini bukan jawaban benar
+    //                     // Atur nilai value menjadi 0
+    //                     $jawabanData[] = [
+    //                         'id_jawaban' => $idJawaban,
+    //                         'jawaban' => $jawabanText,
+    //                         'value' => 0 // Nilai jawaban bukan benar
+    //                     ];
+    //                 }
+    //             }
+    //         }
+
+    //         // Jika tidak ada jawaban benar yang ditemukan, tetapi setidaknya ada satu jawaban
+    //         // maka atur nilai value jawaban pertama menjadi 1
+    //         if (!$correctAnswerFound && count($jawabanData) >= 1) {
+    //             $jawabanData[0]['value'] = 1;
+    //         }
+    //     }
+
+    //     // Update pertanyaan di database
+    //     foreach ($pertanyaanData as $data) {
+    //         $updateResult = $Pertanyaan->update($data['id_pertanyaan'], ['pertanyaan' => $data['pertanyaan']]);
+    //         if (!$updateResult) {
+    //             echo "Gagal memperbarui pertanyaan dengan ID: " . $data['id_pertanyaan'];
+    //             exit;
+    //         }
+    //     }
+
+    //     // Update jawaban di database
+    //     $this->updateJawaban($jawabanData);
+
+    //     // Redirect setelah update berhasil
+    //     return redirect()->to("guru/lihat_posttest?id_mat=".$id_mat."&id_dm=".$id_dm);
+    // }
+
+    public function edit_posttest()
+    {
+        // Model instances
+        $Pertanyaan = new Pertanyaan();
+        $Jawaban = new Jawaban();
+
+        $id_dm = $this->request->getGet('id_dm');
+        $id_mat = $this->request->getGet('id_mat');
+
+        // Array untuk menyimpan data pertanyaan dan jawaban
+        $pertanyaanData = [];
+        $jawabanData = [];
+
+        // Kumpulkan dan validasi data pertanyaan (10 pertanyaan)
+        for ($i = 0; $i < 10; $i++) {
+            $idPertanyaan = $this->request->getPost('idp' . $i);
+            $pertanyaanText = $this->request->getPost('pertanyaan' . $i);
+
+            if ($idPertanyaan && $pertanyaanText) {
+                $pertanyaanData[] = [
+                    'id_pertanyaan' => $idPertanyaan,
+                    'pertanyaan' => $pertanyaanText
+                ];
+            }
+        }
+
+        // Kumpulkan dan validasi data jawaban (40 jawaban, 4 jawaban untuk setiap 10 pertanyaan)
+        for ($i = 0; $i < 10; $i++) {
+            for ($j = 0; $j < 4; $j++) {
+                $idJawaban = $this->request->getPost('idj' . ($i * 4 + $j));
+                $jawabanText = $this->request->getPost('jawaban_' . $i . chr(97 + $j)); // chr(97) adalah 'a', chr(98) adalah 'b', dst.
+                $isCorrect = ($this->request->getPost('jawabanbenar_' . $i) == $j) ? 1 : 0;
+
+                if ($idJawaban && $jawabanText) {
+                    $jawabanData[] = [
+                        'id_jawaban' => $idJawaban,
+                        'jawaban' => $jawabanText,
+                        'value' => $isCorrect
+                    ];
+                }
+            }
+        }
+
+        // Update pertanyaan di database
+        foreach ($pertanyaanData as $data) {
+            $updateResult = $Pertanyaan->update($data['id_pertanyaan'], ['pertanyaan' => $data['pertanyaan']]);
+            if (!$updateResult) {
+                echo "Gagal memperbarui pertanyaan dengan ID: " . $data['id_pertanyaan'];
+                exit;
+            }
+        }
+
+        // Update jawaban di database
+        $this->updateJawaban($jawabanData);
+
+        // Redirect setelah update berhasil
+        return redirect()->to("guru/lihat_posttest?id_mat=".$id_mat."&id_dm=".$id_dm);
+    }
+
     public function hapus_posttest()
     {
         // Ambil nilai id_materi_mapel dari request
         $id_materi_mapel = $this->request->getGet('id_mat');
+        $id_dm = $this->request->getGet('id_dm');
 
         // Buat instance dari model Pertanyaan
         $Pertanyaan = new Pertanyaan();
@@ -511,12 +683,18 @@ class Guru extends BaseController
 
         $update_ada_posttest = $MateriMapelModel->find($id_materi_mapel);
 
+        // $data = [
+        //     'post_test' => "Tidak Ada"
+        // ];
+
         if (!empty($pertanyaanList)) {
             // Hapus semua pertanyaan yang memiliki id_materi_mapel
             $Pertanyaan->where('id_materi_mapel', $id_materi_mapel)->delete();
 
+            $MateriMapelModel->update($id_mat, $data);
+
             $update_ada_posttest->post_test = "Tidak Ada";
-            $MateriMapelModel->save($update_ada_posttest);
+            // $MateriMapelModel->save($update_ada_posttest);
 
             // Set session flashdata untuk menampilkan pesan sukses
             $session = session();
@@ -525,9 +703,7 @@ class Guru extends BaseController
                                                 aria-hidden="true">&times;</span>
                                         </button> <strong>Selamat!</strong> Post Test berhasil di hapus.</div>');
 
-            // Dapatkan referer dari server untuk mengarahkan kembali ke halaman sebelumnya
-            $referer = $this->request->getServer('HTTP_REFERER');
-            return redirect()->to($referer);
+            return redirect()->to("guru/akses_mapel?id_dm=".$id_dm);
         } else {
             // Jika tidak ada pertanyaan yang ditemukan, arahkan kembali ke halaman sebelumnya
             $referer = $this->request->getServer('HTTP_REFERER');

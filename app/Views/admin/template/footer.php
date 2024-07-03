@@ -580,7 +580,7 @@
 
     <script>
         document.getElementById('manualButton').addEventListener('click', function() {
-            window.location.href = 'link_to_manual_page'; // Replace with your actual link
+            window.location.href = '<?= base_url('admin/tambah_siswa'); ?>';
         });
 
         document.getElementById('importButton').addEventListener('click', function() {

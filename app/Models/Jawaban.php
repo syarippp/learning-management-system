@@ -12,5 +12,8 @@ class Jawaban extends Model
     protected $useTimestamps = false;
     protected $allowedFields = ['id_jawaban', 'id_pertanyaan', 'jawaban', 'value'];
 
-
+    public function updateJawaban($id, $data)
+    {
+        return $this->update($id, $data);
+    }
 }

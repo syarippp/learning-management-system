@@ -23,10 +23,15 @@
 
                             <div class="col-12">
                                 <a href="<?= base_url('admin/tambah_guru') ?>">
-                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal"
+                                <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#exampleModal"
                                         data-whatever="@mdo">Tambah Data Guru<span class="btn-icon-right"><i class="fa fa-plus "></i></span>
                                     </button>
                                 </a>
+
+                                <?php if (session()->getFlashKeys()): ?>
+                                            <?php echo session()->getFlashdata('gagalbuatakun'); ?>
+                                            <?php echo session()->getFlashdata('berhasilbuatakun'); ?>
+                                        <?php endif; ?>
 
                         <div class="card mt-3">
                             <div class="card-body">
