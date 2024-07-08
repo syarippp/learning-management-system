@@ -12,29 +12,42 @@ class Pertanyaan extends Model
     protected $useTimestamps = false;
     protected $allowedFields = ['id_pertanyaan', 'id_materi_mapel', 'pertanyaan'];
 
-    public function getPertanyaan()
+    public function getPertanyaan($id_mat)
     {
-        $id_mat = $_GET['id_mat'] ?? null;
+        $query = $this->db->table('pertanyaan')
+                          ->where('id_materi_mapel', $id_mat)
+                          ->orderBy('RAND()') // Mengacak urutan pertanyaan
+                          ->get();
 
-        return $this->db->table('pertanyaan')
-            ->where('id_materi_mapel', $id_mat)
-            ->get()
-            ->getResult();
+        return $query->getResult();
     }
 
-    public function getJawabanByMateriMapel()
+    public function getJawabanByPertanyaan($id_pertanyaan)
     {
-
-        $id_mat = $_GET['id_mat'] ?? null;
-        
         $query = $this->db->table('jawaban')
-                        ->select('jawaban.id_jawaban, jawaban.id_pertanyaan, jawaban.jawaban, jawaban.value')
-                        ->join('pertanyaan', 'jawaban.id_pertanyaan = pertanyaan.id_pertanyaan')
-                        ->where('pertanyaan.id_materi_mapel', $id_mat)
-                        ->get();
+                          ->where('id_pertanyaan', $id_pertanyaan)
+                          ->orderBy('RAND()') // Mengacak urutan jawaban
+                          ->get();
 
         return $query->getResultArray();
     }
+
+    public function getNilaiJawaban($selectedValue)
+    {
+        $query = $this->db->table('jawaban')
+                          ->select('value')
+                          ->where('id_jawaban', $selectedValue)
+                          ->get();
+
+        $result = $query->getRow();
+
+        if ($result) {
+            return $result->value;
+        } else {
+            return 0; // Atau nilai default sesuai kebutuhan, misalnya 0
+        }
+    }
+
 
     public function LihatJawaban()
     {

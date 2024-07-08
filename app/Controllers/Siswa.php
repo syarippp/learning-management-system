@@ -41,12 +41,13 @@ class Siswa extends BaseController
         $data['materi_mapel'] = $userModel->getDetailMateri();
         $data['id_mat'] = $this->request->getGet('id_mat');
 
-
         $Pertanyaan = new Pertanyaan();
         $id_mat = $this->request->getGet('id_mat');
         $data['pertanyaan'] = $Pertanyaan->getPertanyaan($id_mat);
-        $data['jawaban'] = $Pertanyaan->getJawabanByMateriMapel($id_mat);
 
+        foreach ($data['pertanyaan'] as $p) {
+            $data['jawaban'][$p->id_pertanyaan] = $Pertanyaan->getJawabanByPertanyaan($p->id_pertanyaan);
+        }
 
         $header = view('siswa/template/header');
         $mainContent = view('siswa/post_test', $data);
@@ -55,6 +56,49 @@ class Siswa extends BaseController
 
         return $this->response->setBody($fullView);
     }
+
+    public function submit_test()
+{
+    if (!$this->isLoggedIn()) {
+        // Handle jika pengguna belum login
+        return redirect()->to("login");
+    }
+
+    $Pertanyaan = new Pertanyaan();
+    $id_mat_test = $this->request->getGet('id_mat_test');
+    $id_user = $this->session->get('id_users');
+
+    $pertanyaan = $Pertanyaan->getPertanyaan($id_mat_test);
+    $jawaban = $this->request->getPost('jawaban');
+
+    $nilai = 0;
+    foreach ($pertanyaan as $p) {
+        // Pastikan jawaban untuk pertanyaan ini ada dalam $_POST
+        if (isset($jawaban[$p->id_pertanyaan])) {
+            $selectedValue = $jawaban[$p->id_pertanyaan];
+
+            $nilai_jawaban = $selectedValue;
+
+            if ($nilai_jawaban == "1") {
+                $nilai += 10;
+            }
+        }
+    }
+
+
+    // Insert nilai ke database
+    $data = [
+        'id_users' => $id_user,
+        'id_materi_mapel' => $id_mat_test,
+        'nilai' => $nilai,
+    ];
+
+    $this->db->table('nilai')->insert($data);
+
+    return redirect()->to(base_url('siswa/mapel'));
+}
+
+
 
     public function lihat_posttest()
     {
