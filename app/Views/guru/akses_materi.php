@@ -29,18 +29,17 @@
                                     <div class="mt-3"></div>
 
                                     <?php if (session()->getFlashKeys()): ?>
-                                        <?php echo session()->getFlashdata('berhasiltambahmaterimapel'); ?>
+                                        <?php echo session()->getFlashdata('berhasilupdatemapel'); ?>
                                         <?php echo session()->getFlashdata('berhasilhapusmaterimapel'); ?>
                                 <?php endif; ?>
 
-                            <form onsubmit="convertNewlines()" method="POST" enctype="multipart/form-data" action="<?= base_url('guru/edit_materi') ?> ">
+                            <form onsubmit="convertNewlines()" method="POST" enctype="multipart/form-data" action="<?= base_url('guru/edit_materi') ?> "> 
                             <div class="row">
                                 <div class="col-12">
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title">Pendahuluan</h4>
-                                            <textarea id="myTextarea" name="myTextarea" class="form-control" rows="10"><?php foreach ($isi_materimapel as $imm): ?><?php echo $imm->pendahuluan; endforeach; ?>
-                                            </textarea>
+                                            <textarea id="myTextarea" name="myTextarea" class="form-control" rows="10"><?php foreach ($isi_materimapel as $imm): ?><?php echo $imm->pendahuluan; endforeach; ?></textarea>
                                             <input type="text" name="id_mat" value="<?= $id_mat; ?>" hidden>
                                             <input type="text" name="id_dm" value="<?= $id_dm; ?>" hidden>
                                         </div>
@@ -74,7 +73,7 @@
                                 </div>
                             </div>
 
-                            <input type="submit" class="btn btn-primary" name="">
+                            <input type="submit" class="btn btn-primary mb-4" name="">
                         </form>
 
                         </div>

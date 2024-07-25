@@ -10,7 +10,7 @@ class GuruModel extends Model
     protected $primaryKey = "id_users";
     protected $returnType = "object";
     protected $useTimestamps = false;
-    protected $allowedFields = ['id_users', 'username', 'password', 'level', 'alamat', 'kelas', 'no_hp'];
+    protected $allowedFields = ['id_users', 'nisn', 'username', 'nama_lengkap', 'password', 'level', 'nama_lengkap', 'alamat', 'kelas', 'no_hp', 'profil_picture'];
 
     public function getGuru(){
         return $this->db->table('users')
@@ -22,6 +22,26 @@ class GuruModel extends Model
     public function getActiveMapels()
     {
         return $this->db->table('mapel')
+            ->get()
+            ->getResult();
+    }
+
+    public function getGuruWithID()
+    {
+        $id_users = $_GET['id_users'] ?? null;
+
+        return $this->db->table('users')
+            ->where('id_users', $id_users)
+            ->get()
+            ->getResult();
+    }
+
+    public function getSiswaWithID()
+    {
+        $id_users = $_GET['id_users'] ?? null;
+
+        return $this->db->table('users')
+            ->where('id_users', $id_users)
             ->get()
             ->getResult();
     }

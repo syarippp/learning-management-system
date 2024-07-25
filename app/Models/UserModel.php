@@ -34,6 +34,16 @@ class UserModel extends Model
             ->getResult();
     }
 
+    public function getSiswaByKelas(){
+        $kelas = $_GET['kelas'] ?? null;
+
+        return $this->db->table('users')
+            ->where('level', 'siswa')
+            ->where('kelas', $kelas)
+            ->get()
+            ->getResult();
+    }
+
     // public function getMapel()
     // {
     //     $id_mapel = $_GET['id'] ?? null;

@@ -26,15 +26,20 @@
 
                             <div class="mt-3"></div>
 
-                            <?php if (session()->getFlashKeys()): ?>
-                                <?php echo session()->getFlashdata('berhasiltambahmaterimapel'); ?>
-                                <?php echo session()->getFlashdata('berhasilhapusmaterimapel'); ?>
-                            <?php endif; ?>
-                            <?php foreach ($per as $pert): ?>
-                            <form action="<?= base_url('guru/proses_posttest?id_mat='.$pert->id_materi_mapel.'&id_dm='.$pert->id_detail_mapel.'') ?>" method="post">
-                            <?php endforeach; ?>
+                            
 
                             <div class="col-xl-12">
+
+                                <a href="<?= base_url('guru/akses_mapel?id_dm='.$id_dm) ?>"><button class="btn btn-primary mb-4">Kembali</button></a>
+
+                                    <?php if (session()->getFlashKeys()): ?>
+                                        <?php echo session()->getFlashdata('berhasiltambahmaterimapel'); ?>
+                                        <?php echo session()->getFlashdata('berhasilhapusmaterimapel'); ?>
+                                    <?php endif; ?>
+                                    <?php foreach ($per as $pert): ?>
+                                    <form action="<?= base_url('guru/proses_posttest?id_mat='.$pert->id_materi_mapel.'&id_dm='.$pert->id_detail_mapel.'') ?>" method="post">
+                                    <?php endforeach; ?>
+
                                 <div class="card forms-card">
                                     <div class="card-body">
                                         <h4 class="card-title mb-4">Soal 1</h4>

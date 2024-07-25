@@ -35,7 +35,7 @@
                                                     <input type="name" name="nama_sesudah" class="form-control" required>
                                                 </div>
                                                 <button type="submit" class="btn btn-primary btn-form mr-2">Edit</button>
-                                                <button type="button" class="btn btn-light text-dark btn-form">Cancel</button>
+                                                <a href="<?= base_url('admin/data_mapel') ?>"><button type="button" class="btn btn-light text-dark btn-form">Cancel</button></a>
                                             </form>
                                         </div>
                                     </div>

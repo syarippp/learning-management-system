@@ -88,7 +88,7 @@
                                                     <td><?= $g->alamat ?></td>
                                                     <td>
                                                     <div class="col-12 text-center" style="width: 350px;">
-                                                        <a href="<?= base_url('admin/edit_guru?id_users='.$g->id_users.''); ?>">
+                                                        <a href="<?= base_url('admin/edit_siswa?id_users='.$g->id_users.''); ?>">
                                                             <button type="button" class="btn btn-warning btn-xs">Edit Data<span class="btn-icon-right"><i class="fa fa-arrow-circle-right "></i></span></button>
                                                         </a>
                                                         <a href="<?= base_url('admin/hapus_guru?id_users='.$g->id_users.''); ?>">

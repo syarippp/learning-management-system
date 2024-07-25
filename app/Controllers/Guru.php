@@ -5,9 +5,12 @@ use App\Models\GuruModel;
 use App\Models\UserModel;
 use App\Models\DetailMapelModel;
 use App\Models\MapelModel;
-use App\Models\MateriMapelModel;
+use App\Models\MateriMapelModel; 
 use App\Models\Pertanyaan;
 use App\Models\Jawaban;
+use App\Models\NilaiModel;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class Guru extends BaseController
 {
@@ -61,6 +64,40 @@ class Guru extends BaseController
         return $this->response->setBody($fullView);
     }
 
+    public function export_pdf()
+    {
+        // Check if user is logged in
+        if (!$this->isLoggedIn()) {
+            $session = session();
+            $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
+                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span>
+                                        </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
+            return redirect()->to("login");
+        }
+
+        $id_dm = $this->request->getGet('id_dm');
+        $id_mat = $this->request->getGet('id_mat');
+        $id_materi_mapel = $this->request->getGet('id_mat');
+        $data['kelas'] = $this->request->getGet('kelas');
+        $NilaiModel = new NilaiModel();
+        $MateriMapelModel = new MateriMapelModel();
+        $data['lihat_nilai'] = $NilaiModel->LihatNilai();
+        $data['id_dm'] = $id_dm;
+        $data['id_mat'] = $id_mat;
+        $data['pertemuan'] = $MateriMapelModel->getMateriMapelById($id_materi_mapel);
+
+        $html = view('guru/lihat_nilai_pdf', $data);
+
+        $dompdfOptions = new Options();
+        $dompdfOptions->set('defaultFont', 'Courier');
+        $dompdf = new Dompdf($dompdfOptions);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+        $dompdf->stream('Lihat_Nilai.pdf', array('Attachment' => 0));
+    }
+
     public function profil()
     {
         // Check if user is logged in
@@ -108,6 +145,31 @@ class Guru extends BaseController
         return $this->response->setBody($fullView);
     }
 
+    public function data_siswa()
+    {
+        // Check if user is logged in
+        if (!$this->isLoggedIn()) {
+            $session = session();
+            $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
+                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span>
+                                        </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
+            return redirect()->to("login");
+        }
+
+        $UserModel = new UserModel();
+        $data['getsiswa'] = $UserModel->getSiswaByKelas();
+        $data['kelas'] = $this->request->getGet('kelas');
+        $data['id'] = $this->request->getGet('id');
+
+        $header = view('guru/template/header');
+        $mainContent = view('guru/data_siswa', $data);
+        $footer = view('guru/template/footer');
+        $fullView = $header . $mainContent . $footer;
+
+        return $this->response->setBody($fullView);
+    }
+
     public function detail_mapel()
     {
         // Check if user is logged in
@@ -127,6 +189,7 @@ class Guru extends BaseController
         $data['mapel_aktif'] = $guruModel->getMapel();
         // $data['nama_pengajar'] = $guruModel->getNamaPengajar();
         $data['mapel_nama'] = $guruModel->getMapelNama();
+        $data['id'] = $this->request->getGet('id');
 
         $header = view('guru/template/header');
         $mainContent = view('guru/detail_mapel', $data);
@@ -152,7 +215,8 @@ class Guru extends BaseController
         $MateriMapelModel = new MateriMapelModel();
         $data['detail_mapel'] = $guruModel->getDetailMapel();
         $data['pertemuan'] = $guruModel->getPertemuanMapel();
-        // print_r($data['detail_mapel']);
+        $data['id_dm'] = $this->request->getGet('id_dm');
+        $data['id'] = $this->request->getGet('id');
 
         $header = view('guru/template/header');
         $mainContent = view('guru/akses_mapel', $data);
@@ -194,6 +258,31 @@ class Guru extends BaseController
         return $this->response->setBody($fullView);
     }
 
+    public function lihat_nilai()
+    {
+        // Check if user is logged in
+        if (!$this->isLoggedIn()) {
+            $session = session();
+            $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
+                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span>
+                                        </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
+            return redirect()->to("login");
+        }
+
+        $NilaiModel = new NilaiModel();
+        $data['lihat_nilai'] = $NilaiModel->LihatNilai();
+        $data['id_dm'] = $this->request->getGet('id_dm');
+        $data['id_mat'] = $this->request->getGet('id_mat');
+
+        $header = view('guru/template/header');
+        $mainContent = view('guru/lihat_nilai', $data);
+        $footer = view('guru/template/footer');
+        $fullView = $header . $mainContent . $footer;
+
+        return $this->response->setBody($fullView);
+    }
+
     public function buat_posttest()
     {
         // Check if user is logged in
@@ -210,6 +299,7 @@ class Guru extends BaseController
         $data['detail_mapel'] = $guruModel->getDetailMapel();
         $data['pertemuan'] = $guruModel->getPertemuanMapel();
         $data['per'] = $guruModel->getPert();
+        $data['id_dm'] = $this->request->getGet('id_dm');
         // print_r($data['detail_mapel']);
 
         $header = view('guru/template/header');
@@ -494,6 +584,11 @@ class Guru extends BaseController
 
         // Update data di database
         if ($MateriMapelModel->update($id_mat, $data)) {
+            $session = session();
+            $session->setFlashdata('berhasilupdatemapel', '<div class="alert alert-success">
+                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                          <i class="icon-line-lock"></i><b>Selamat!</b> Materi pertemuan ini berhasil di update.</a>
+                        </div>');
             return redirect()->back()->with('success', 'Materi berhasil diupdate.');
         } else {
             return redirect()->back()->with('error', 'Gagal mengupdate data.');
@@ -683,15 +778,15 @@ class Guru extends BaseController
 
         $update_ada_posttest = $MateriMapelModel->find($id_materi_mapel);
 
-        // $data = [
-        //     'post_test' => "Tidak Ada"
-        // ];
+        $data = [
+            'post_test' => "Tidak Ada"
+        ];
 
         if (!empty($pertanyaanList)) {
             // Hapus semua pertanyaan yang memiliki id_materi_mapel
             $Pertanyaan->where('id_materi_mapel', $id_materi_mapel)->delete();
 
-            $MateriMapelModel->update($id_mat, $data);
+            $MateriMapelModel->update($id_materi_mapel, $data);
 
             $update_ada_posttest->post_test = "Tidak Ada";
             // $MateriMapelModel->save($update_ada_posttest);
@@ -798,22 +893,22 @@ class Guru extends BaseController
         }
     }
 
-    public function hapus_mapel()
-    {
-        $id_mapel = $this->request->getGet('id_mapel');
+    // public function hapus_mapel()
+    // {
+    //     $id_mapel = $this->request->getGet('id_mapel');
 
-        $MapelModel = new MapelModel();
-        $mm = $MapelModel->find($id_mapel);
+    //     $MapelModel = new MapelModel();
+    //     $mm = $MapelModel->find($id_mapel);
 
-        if ($mm) {
-            $MapelModel->delete($id_mapel);
-            $referer = $this->request->getServer('HTTP_REFERER'); // Simpan URL referer
-            return redirect()->to($referer); // Arahkan kembali ke URL referer
-        } else {
-            // Service not found, redirect or display an error message
-            return redirect()->to('guru/index')->with('error', 'Service not found');
-        }
-    }
+    //     if ($mm) {
+    //         $MapelModel->delete($id_mapel);
+    //         $referer = $this->request->getServer('HTTP_REFERER'); // Simpan URL referer
+    //         return redirect()->to($referer); // Arahkan kembali ke URL referer
+    //     } else {
+    //         // Service not found, redirect or display an error message
+    //         return redirect()->to('guru/index')->with('error', 'Service not found');
+    //     }
+    // }
 
     public function goBack()
     {

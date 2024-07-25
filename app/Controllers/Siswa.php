@@ -4,6 +4,8 @@ namespace App\Controllers;
 use App\Models\UserModel;
 use App\Models\Pertanyaan;
 use App\Models\Jawaban;
+use App\Models\NilaiModel;
+use App\Models\ProgressModel;
 
 class Siswa extends BaseController
 {
@@ -45,6 +47,11 @@ class Siswa extends BaseController
         $id_mat = $this->request->getGet('id_mat');
         $data['pertanyaan'] = $Pertanyaan->getPertanyaan($id_mat);
 
+        $ProgressModel = new ProgressModel();
+        $id_users = $this->session->get('id_users');
+        $id_mat = $this->request->getGet('id_mat');
+        $data['check_progress'] = $ProgressModel->getProgress($id_users, $id_mat);
+
         foreach ($data['pertanyaan'] as $p) {
             $data['jawaban'][$p->id_pertanyaan] = $Pertanyaan->getJawabanByPertanyaan($p->id_pertanyaan);
         }
@@ -56,6 +63,7 @@ class Siswa extends BaseController
 
         return $this->response->setBody($fullView);
     }
+
 
     public function submit_test()
 {
@@ -85,18 +93,44 @@ class Siswa extends BaseController
         }
     }
 
+    if ($nilai >= 80) {
+        $ProgressModel = new ProgressModel();
+        $id_progress = $this->request->getGet('id_progress');
+        $id_mat = $this->request->getGet('id_mat');
+        $user = $ProgressModel->find($id_progress);
 
-    // Insert nilai ke database
-    $data = [
-        'id_users' => $id_user,
-        'id_materi_mapel' => $id_mat_test,
-        'nilai' => $nilai,
-    ];
+        if ($user) {
+            // Update the user's profile data
+            $user->nilai_post_test = 1;
 
-    $this->db->table('nilai')->insert($data);
+            // Save the updated user data
+            $ProgressModel->save($user);
 
-    return redirect()->to(base_url('siswa/mapel'));
-}
+            // Insert nilai ke database
+            $data = [
+                'id_users' => $id_user,
+                'id_materi_mapel' => $id_mat_test,
+                'nilai' => $nilai,
+            ];
+
+            $this->db->table('nilai')->insert($data);
+
+            return redirect()->to(base_url('siswa/materi_pertemuan?id_mat='.$id_mat_test));
+            }
+        }
+        else{
+            // Insert nilai ke database
+            $data = [
+                'id_users' => $id_user,
+                'id_materi_mapel' => $id_mat_test,
+                'nilai' => $nilai,
+            ];
+
+            $this->db->table('nilai')->insert($data);
+
+            return redirect()->to(base_url('siswa/materi_pertemuan?id_mat='.$id_mat_test));
+            }
+        }
 
 
 
@@ -227,9 +261,16 @@ class Siswa extends BaseController
             return redirect()->to("login");
         }
 
+        //check progress ini 
+        $ProgressModel = new ProgressModel();
+        $id_users = $this->session->get('id_users');
+        $id_mat = $this->request->getGet('id_mat');
+        $data['check_progress'] = $ProgressModel->getProgress($id_users, $id_mat);
+
         $userModel = new UserModel();
         $data['detail_mapel'] = $userModel->getDetailMapel();
         $data['pertemuan'] = $userModel->getPertemuanMapel();
+        $data['id_dm'] = $this->request->getGet('id_dm');
         // print_r($data['detail_mapel']);
 
         $header = view('siswa/template/header');
@@ -238,6 +279,127 @@ class Siswa extends BaseController
         $fullView = $header . $mainContent . $footer;
 
         return $this->response->setBody($fullView);
+    }
+
+    public function tambah_prog_pendahuluan(){
+        if (!$this->isLoggedIn()) {
+            $session = session();
+            $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
+                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span>
+                                        </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
+            return redirect()->to("login");
+        }
+
+        $ProgressModel = new ProgressModel();
+        $id_progress = $this->request->getGet('id_progress');
+        $id_mat = $this->request->getGet('id_mat');
+        $user = $ProgressModel->find($id_progress);
+
+        if ($user) {
+            // Update the user's profile data
+            $user->pendahuluan = 1;
+
+            // Save the updated user data
+            $ProgressModel->save($user);
+            
+            // Redirect to the profile page
+            return redirect()->to("siswa/materi_pertemuan?id_mat=".$id_mat);
+        } else {
+            // If user data not found, redirect to the index page
+            return redirect()->to("siswa/materi_pertemuan?id_mat=".$id_mat);
+        }
+
+    }
+
+    public function tambah_prog_video(){
+        if (!$this->isLoggedIn()) {
+            $session = session();
+            $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
+                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span>
+                                        </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
+            return redirect()->to("login");
+        }
+
+        $ProgressModel = new ProgressModel();
+        $id_progress = $this->request->getGet('id_progress');
+        $id_mat = $this->request->getGet('id_mat');
+        $user = $ProgressModel->find($id_progress);
+
+        if ($user) {
+            // Update the user's profile data
+            $user->video = 1;
+
+            // Save the updated user data
+            $ProgressModel->save($user);
+            
+            // Redirect to the profile page
+            return redirect()->to("siswa/materi_pertemuan?id_mat=".$id_mat);
+        } else {
+            // If user data not found, redirect to the index page
+            return redirect()->to("siswa/materi_pertemuan?id_mat=".$id_mat);
+        }
+
+    }
+
+    public function tambah_prog_materi(){
+        if (!$this->isLoggedIn()) {
+            $session = session();
+            $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
+                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span>
+                                        </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
+            return redirect()->to("login");
+        }
+
+        $ProgressModel = new ProgressModel();
+        $id_progress = $this->request->getGet('id_progress');
+        $id_mat = $this->request->getGet('id_mat');
+        $user = $ProgressModel->find($id_progress);
+
+        if ($user) {
+            // Update the user's profile data
+            $user->materi = 1;
+
+            // Save the updated user data
+            $ProgressModel->save($user);
+            
+            // Redirect to the profile page
+            return redirect()->to("siswa/materi_pertemuan?id_mat=".$id_mat);
+        } else {
+            // If user data not found, redirect to the index page
+            return redirect()->to("siswa/materi_pertemuan?id_mat=".$id_mat);
+        }
+
+    }
+
+    public function buat_progress(){
+        if (!$this->isLoggedIn()) {
+            $session = session();
+            $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
+                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span>
+                                        </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
+            return redirect()->to("login");
+        }
+
+        $ProgressModel = new ProgressModel();
+        $id_users = $this->session->get('id_users');
+        $id_mat = $this->request->getGet('id_mat');
+        $id_dm = $this->request->getGet('id_dm');
+
+        $check_progress = $ProgressModel->getNilai($id_users, $id_mat);
+
+        if($check_progress == NULL){
+            $ProgressModel->insertIfNull($id_users, $id_mat);
+
+            return redirect()->to("siswa/materi_pertemuan?id_mat=".$id_mat."&id_dm=".$id_dm);
+        }
+        else{
+            return redirect()->to("siswa/materi_pertemuan?id_mat=".$id_mat."&id_dm=".$id_dm);
+        }
+
     }
 
     public function materi_pertemuan()
@@ -253,8 +415,26 @@ class Siswa extends BaseController
         }
 
         $userModel = new UserModel();
+        $NilaiModel = new NilaiModel();
+
+        $id_users = $this->session->get('id_users');
+
         $data['materi_mapel'] = $userModel->getDetailMateri();
+        $data['list_nilai'] = $NilaiModel->getNilai($id_users);
         $data['id_mat'] = $this->request->getGet('id_mat');
+        $data['id_dm'] = $this->request->getGet('id_dm');
+        
+        //hitung attempt test
+        $NilaiModel = new NilaiModel();
+        $id_user = $this->session->get('id_users');
+        $data['attempt_test'] = $NilaiModel->countAttemptTest($id_user);
+
+
+        //check progress ini 
+        $ProgressModel = new ProgressModel();
+        $id_users = $this->session->get('id_users');
+        $id_mat = $this->request->getGet('id_mat');
+        $data['check_progress'] = $ProgressModel->getProgress($id_users, $id_mat);
 
         $header = view('siswa/template/header');
         $mainContent = view('siswa/materi_pertemuan', $data);
@@ -277,7 +457,7 @@ class Siswa extends BaseController
         }
 
         $userModel = new UserModel();
-        $data['data_users'] = $userModel->getDataUsers();
+        $data['data_users'] = $userModel->getDataUsers(); 
 
         $header = view('siswa/template/header');
         $mainContent = view('siswa/profil', $data);

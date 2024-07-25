@@ -93,11 +93,12 @@
                                     <thead>
                                         <tr>
                                             <th width="50">No</th>
-                                            <th width="400">Nama Mapel</th>
+                                            <th width="">Nama Mapel</th>
                                             <th width="150">Kelas Mapel</th>
                                             <th width="150">Tahun Mapel</th>
                                             <!-- <th>Pengajar</th> -->
-                                            <th width="400"><center>Aksi</center></th>
+                                            <th width="500"><center>Aksi</center></th>
+                                            <th width="100"><center>Data Siswa</center></th>
                                             <th><center>Status</center></th>
                                     </thead>
 
@@ -110,28 +111,32 @@
                                             <td><center><?php echo $ma->kelas_mapel; ?></center></td>
                                             <td><center><?php echo $ma->tahun_mapel; ?></center></td>
                                             <!-- <td><center><?php echo $ma->nama_lengkap; ?></center></td> -->
-                                            <td width="800">
-                                                <center>
-                                                <a href="<?= base_url('guru/akses_mapel?id_dm='.$ma->id_detail_mapel.''); ?>">
-                                                    <button type="button" class="btn btn-success btn-xs">Akses Mapel <span class="btn-icon-right"><i class="fa fa-arrow-circle-right "></i></span></button>
+                                            <td width="1000">
+                                                <div style="display: flex; justify-content: center; gap: 10px;">
+                                                    <a href="<?= base_url('guru/akses_mapel?id_dm='.$ma->id_detail_mapel.''); ?>">
+                                                        <button type="button" class="btn btn-success btn-xs">Akses<span class="btn-icon-right"><i class="fa fa-arrow-circle-right "></i></span></button>
+                                                    </a>
+                                                    <a href="<?= base_url('guru/hapus_detail_mapel?id_detail_mapel='.$ma->id_detail_mapel.''); ?>">
+                                                        <button type="button" class="btn btn-danger btn-xs" onclick="return confirm('Apakah Anda yakin ingin menghapus detail mapel ini?')">Hapus<span class="btn-icon-right"><i class="fa fa-trash"></i></span></button>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td width="50">
+                                                <a target="_blank" href="<?= base_url('guru/data_siswa?kelas=') ?><?= $ma->kelas_mapel;?>">
+                                                    <button class="btn btn-primary btn-xs">Data Siswa</button>
                                                 </a>
-                                                <a href="<?= base_url('guru/hapus_detail_mapel?id_detail_mapel='.$ma->id_detail_mapel.''); ?>">
-                                                    <button type="button" class="btn btn-danger btn-xs" onclick="return confirm('Apakah Anda yakin ingin menghapus mapel ini?')">Hapus Mapel <span class="btn-icon-right"><i class="fa fa-trash"></i></span></button>
-
-                                                </a>
-                                            </center>
                                             </td>
                                             <td>
                                                 <?php
                                                     if($ma->status == "aktif"){
                                                         echo "
                                                         <a href='". base_url('guru/update_status_mapel_ketidakaktif?iddetailmapel='.$ma->id_detail_mapel) ."'>
-                                                            <button type='button' class='btn btn-outline-danger btn-ft' onclick='return confirm(\"Apakah Anda yakin ingin menonaktifkan?\")'>Non Aktifkan</button>
+                                                            <button type='button' class='btn btn-outline-danger btn-ft btn-xs' onclick='return confirm(\"Apakah Anda yakin ingin menonaktifkan?\")'>Non Aktifkan</button>
                                                         </a>";
                                                     }else{
                                                         echo"
                                                         <a href='". base_url('guru/update_status_mapel_keaktif?iddetailmapel='.$ma->id_detail_mapel) ."'>
-                                                            <button type='button' class='btn btn-outline-info btn-ft' onclick='return confirm(\"Apakah Anda yakin ingin mengaktifkan kembali?\")'>Aktifkan</button>
+                                                            <button type='button' class='btn btn-outline-info btn-ft btn-xs' onclick='return confirm(\"Apakah Anda yakin ingin mengaktifkan kembali?\")'>Aktifkan</button>
                                                         </a>";
                                                     }
                                                 ?>
@@ -151,6 +156,7 @@
                                             <th>Tahun Mapel</th>
                                             <!-- <th>Pengajar</th> -->
                                             <th><center>Aksi</center></th>
+                                            <th width="400"><center>Data Siswa</center></th>
                                             <th><center>Status</center></th>
                                         </tr>
                                     </tfoot>

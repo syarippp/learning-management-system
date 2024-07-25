@@ -25,7 +25,7 @@
                             </div>
 
                             <div class="row">
-
+                                <?php foreach ($data_users as $g): ?>
                                 <div class="col-lg-4">
                                     <div class="card">
                                         <div class="card-body">
@@ -35,7 +35,7 @@
                                                     <div class="card-body user-details-contact text-center">
                                                         
                                                         <div class="user-details-image mb-3">
-                                                            <img class="rounded-circle" src="<?= base_url(); ?>profil_picture/pp.jpg" alt="image">
+                                                            <img class="rounded-circle" src="<?= base_url(); ?>profil_picture/<?= $g->profil_picture; ?>" alt="image">
                                                         </div>
                                                         <div class="user-intro">
                                                             <h4 class="text-primary card-intro-title mb-0"><?php echo session('nama_lengkap'); ?></h4>
@@ -50,6 +50,8 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <?php endforeach; ?>
 
                                 <div class="col-xl-8">
                                     <div class="card forms-card">

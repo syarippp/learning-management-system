@@ -174,8 +174,8 @@
                             <div class="drop-down dropdown-profile animated bounceInDown">
                                 <div class="dropdown-content-body">
                                     <ul>
-                                        <li><a href="<?= base_url('guru/profil') ?>"><i class="icon-user"></i> <span>My Profile</span></a>
-                                        </li>
+                                        <!-- <li><a href="<?= base_url('guru/profil') ?>"><i class="icon-user"></i> <span>My Profile</span></a>
+                                        </li> -->
                                         <li><a href="<?= base_url('home/logout') ?>"><i class="icon-power"></i> <span>Logout</span></a>
                                         </li>
                                     </ul>

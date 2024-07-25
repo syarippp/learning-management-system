@@ -135,6 +135,79 @@ class Admin extends BaseController
         return $this->response->setBody($fullView);
     }
 
+    public function edit_siswa()
+    {
+        // Check if user is logged in
+        if (!$this->isLoggedIn()) {
+            $session = session();
+            $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
+                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span>
+                                        </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
+            return redirect()->to("login");
+        }
+
+        $GuruModel = new GuruModel();
+        $data['siswa'] = $GuruModel->getSiswaWithID();
+
+        $header = view('admin/template/header');
+        $mainContent = view('admin/edit_siswa', $data);
+        $footer = view('admin/template/footer');
+        $fullView = $header . $mainContent . $footer;
+
+        return $this->response->setBody($fullView);
+    }
+
+    public function edit_guru()
+    {
+        // Check if user is logged in
+        if (!$this->isLoggedIn()) {
+            $session = session();
+            $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
+                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span>
+                                        </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
+            return redirect()->to("login");
+        }
+
+        $GuruModel = new GuruModel();
+        $data['guru'] = $GuruModel->getGuruWithID();
+
+        $header = view('admin/template/header');
+        $mainContent = view('admin/edit_guru', $data);
+        $footer = view('admin/template/footer');
+        $fullView = $header . $mainContent . $footer;
+
+        return $this->response->setBody($fullView);
+    }
+
+    public function update_guru()
+    {
+        $guruModel = new GuruModel();
+        
+        // Ambil data dari form
+        $data = [
+            'nama_lengkap' => $this->request->getPost('nama_lengkap'),
+            'alamat' => $this->request->getPost('alamat'),
+            'no_hp' => $this->request->getPost('no_hp'),
+        ];
+
+        // Proses upload gambar
+        $profilPicture = $this->request->getFile('profil_picture');
+        if ($profilPicture->isValid() && !$profilPicture->hasMoved()) {
+            $newName = $profilPicture->getRandomName();
+            $profilPicture->move('profil_picture', $newName);
+            $data['profil_picture'] = $newName;
+        }
+
+        // Update data ke database
+        $id_users = $this->request->getPost('id_users');
+        $guruModel->update($id_users, $data);
+
+        // Redirect ke halaman admin atau tampilkan pesan sukses
+        return redirect()->to(base_url('admin/data_guru'))->with('message', 'Data guru berhasil diperbarui.');
+    }
+
     public function edit_mapel()
     {
         // Check if user is logged in

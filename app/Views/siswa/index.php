@@ -32,7 +32,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-lg-6 col-xl-6 col-xxl-6">
+                            <!-- <div class="col-sm-6 col-lg-6 col-xl-6 col-xxl-6">
                                 <div class="card">
                                     <div class="card-body widget-school-stat bg-2 rounded">
                                         <div class="text">
@@ -44,7 +44,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>

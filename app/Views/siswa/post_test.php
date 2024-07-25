@@ -16,6 +16,13 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Bayangan untuk memberi efek 3D */
 }
 
+.no-select {
+    user-select: none; /* Nonaktifkan pemilihan teks */
+    -webkit-user-select: none; /* Nonaktifkan pemilihan teks di Webkit (Safari, Chrome) */
+    -moz-user-select: none; /* Nonaktifkan pemilihan teks di Firefox */
+    -ms-user-select: none; /* Nonaktifkan pemilihan teks di Internet Explorer/Edge */
+}
+
 </style>
 
 <div class="content-body">
@@ -48,7 +55,9 @@
                         </h2>
                     </div>
                     <div id="quiz-container">
-    <form id="quiz-form" method="post" action="<?= base_url('siswa/submit_test?id_mat_test='.$mm->id_materi_mapel) ?>">
+                        <?php foreach ($check_progress as $cp): ?>
+    <form id="quiz-form" method="post" action="<?= base_url('siswa/submit_test?id_mat_test='.$mm->id_materi_mapel.'&id_progress='.$cp->id_progress) ?>">
+        <?php endforeach; ?> 
         <?php $jaw = 0; ?>
         <?php $soal = 1; ?>
         <?php foreach ($pertanyaan as $index => $p) : ?>
@@ -56,7 +65,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body no-select">
                             <h4 class="card-title"><?= $soal.". "; ?><?= $p->pertanyaan ?></h4>
                             <div class="card-content">
                                 <?php foreach ($jawaban[$p->id_pertanyaan] as $opt => $jawab) { ?>
@@ -72,7 +81,7 @@
                 </div>
             </div>
             <div class="timer" id="timer<?= $index ?>">60</div>
-            <button type="button" class="next-btn" onclick="showNextQuestion(<?= $index ?>)">Next</button>
+            <button type="button" class="next-btn btn btn-primary" onclick="showNextQuestion(<?= $index ?>)">Next</button>
         </div>
         <?php $soal += 1; ?>
         <?php endforeach; ?>
@@ -117,7 +126,28 @@
     });
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const questions = document.querySelectorAll('.question .card-body');
 
+        questions.forEach(question => {
+            question.addEventListener('copy', (e) => {
+                e.preventDefault();
+                alert('Copying text is not allowed.');
+            });
+
+            question.addEventListener('paste', (e) => {
+                e.preventDefault();
+                alert('Pasting text is not allowed.');
+            });
+
+            question.addEventListener('cut', (e) => {
+                e.preventDefault();
+                alert('Cutting text is not allowed.');
+            });
+        });
+    });
+</script>
 
                 </div>
             </div>

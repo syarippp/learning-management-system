@@ -5,13 +5,13 @@
             <div class="container-fluid">
                 <div class="row page-titles">
                     <div class="col p-md-0">
-                        <h4>Mata Pelajaran</h4>
+                        <h4>Data Siswa</h4>
                     </div>
                     <div class="col p-md-0">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a>
                             </li>
-                            <li class="breadcrumb-item active">Mapel</li>
+                            <li class="breadcrumb-item active">Data Siswa</li>
                         </ol>
                     </div>
                 </div>
@@ -19,9 +19,7 @@
                 <div class="row">
                     <div class="col-12">
 
-                        <!-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal"
-                                        data-whatever="@mdo">Tambah Mapel Baru<span class="btn-icon-right"><i class="fa fa-plus "></i></span>
-                                    </button> -->
+                        <h1 class="text-center text-primary">DATA SISWA</h1><h2 class="text-center text-dark">Kelas <?= $kelas; ?></h2>
 
                                     <div class="mt-3"></div>
                                     <?php if (session()->getFlashKeys()): ?>
@@ -61,23 +59,26 @@
                                     <table id="example" class="display" style="min-width: 845px">
                                     <thead>
                                         <tr>
-                                            <th width="50">No</th>
-                                            <th width="800">Nama Mapel</th>
-                                            <th width="500"><center>Aksi</center></th>
+                                            <th width="">No</th>
+                                            <th width="">NISN</th>
+                                            <th width="">Nama Lengkap</th>
+                                            <th width="">Kelas</th>
+                                            <th width="">Alamat</th>
+                                            <th width="">No HP</th>
+                                            <th width="">Profil Picture</th>
                                     </thead>
 
                                     <tbody style="color: black;">
                                         <?php $no = 1; ?>
-                                        <?php foreach ($mapel_aktif as $ma): ?>
+                                        <?php foreach ($getsiswa as $ma): ?>
                                         <tr>
                                             <td><?php echo $no; ?></center></td>
-                                            <td><?php echo $ma->nama_mapel; ?></td>
-                                            <td><center>
-                                                <!-- <a href="<?= base_url('guru/detail_mapel?id='.$ma->id_mapel.'') ?>"><button type="button" class="btn btn-sl-sm btn-success">Detail Mapel</button></a> -->
-                                                <a href="<?= base_url('guru/detail_mapel?id='.$ma->id_mapel); ?>">
-                                                    <button type="button" class="btn btn-success btn-xs">Detail Mapel <span class="btn-icon-right"><i class="fa fa-arrow-circle-right "></i></span></button>
-                                                </a>
-                                            </td>
+                                            <td><?php echo $ma->nisn; ?></td>
+                                            <td><?php echo $ma->nama_lengkap; ?></td>
+                                            <td><?php echo $ma->kelas; ?></td>
+                                            <td><?php echo $ma->alamat; ?></td>
+                                            <td><?php echo $ma->no_hp; ?></td>
+                                            <td><img width="100" src="<?= base_url('profil_picture/') ?><?= $ma->profil_picture ?>"></td>
                                         </tr>
                                         <?php $no++; ?>
 
@@ -87,9 +88,13 @@
 
                                     <tfoot>
                                         <tr>
-                                            <th>No</th>
-                                            <th>Nama Mapel</th>
-                                            <th><center>Aksi</center></th>
+                                            <th width="">No</th>
+                                            <th width="">NISN</th>
+                                            <th width="">Nama Lengkap</th>
+                                            <th width="">Kelas</th>
+                                            <th width="">Alamat</th>
+                                            <th width="">No HP</th>
+                                            <th width="">Profil Picture</th>
                                         </tr>
                                     </tfoot>
                                 </table>

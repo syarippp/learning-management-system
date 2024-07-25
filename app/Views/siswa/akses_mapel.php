@@ -14,7 +14,7 @@
                             <li class="breadcrumb-item active">Akses Mapel</li>
                         </ol>
                     </div>
-                </div>
+                </div> 
 
                 <div class="row justify-content-center">
                     <div class="col-lg-12 col-xl-8 col-xxl-12">
@@ -27,12 +27,13 @@
                             <div class="row">
 
                                 <?php foreach ($pertemuan as $pert): ?>
-                                <div class="col-lg-4">
+                                <div class="col-lg-6">
                                     <div class="card text-white bg-success">
                                         <div class="card-body">
                                             <h3 class="card-title">Pertemuan <?php echo $pert->pertemuan; ?></h3>
                                             <p class="card-text">Klik tombol dibawah untuk mengakses materi pertemuan <?php echo $pert->pertemuan; ?></p>
-                                                <a href="<?= base_url('siswa/materi_pertemuan?id_mat='.$pert->id_materi_mapel.''); ?>" class="btn btn-card btn-dark">Akses Materi</a>
+                                                <!-- <a href="<?= base_url('siswa/materi_pertemuan?id_mat='.$pert->id_materi_mapel.''); ?>" class="btn btn-card btn-dark">Akses Materi</a> -->
+                                                <a href="<?= base_url('siswa/buat_progress?id_mat='.$pert->id_materi_mapel.'&id_dm='.$id_dm); ?>" class="btn btn-card btn-dark">Akses Materi</a>
                                         </div>
                                     </div>
                                 </div>
