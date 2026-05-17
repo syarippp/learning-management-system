@@ -3,21 +3,16 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
-
+ 
 class UserModel extends Model
 {
     protected $table = "users";
     protected $primaryKey = "id_users";
     protected $returnType = "object";
     protected $useTimestamps = false;
-    protected $allowedFields = ['nisn', 'id_users', 'username', 'password', 'level', 'alamat', 'kelas', 'no_hp', 'nama_lengkap'];
+    protected $allowedFields = ['nis', 'id_users', 'username', 'password', 'level', 'alamat', 'kelas', 'no_hp', 'nama_lengkap'];
 
-     public function getActiveMapels()
-    {
-        return $this->db->table('mapel')
-            ->get()
-            ->getResult();
-    }
+    
 
     public function getDataUsers()
     {
@@ -30,6 +25,30 @@ class UserModel extends Model
     public function getSiswa(){
         return $this->db->table('users')
             ->where('level', 'siswa')
+            ->get()
+            ->getResult();
+    }
+
+    public function getSiswa10(){
+        return $this->db->table('users')
+            ->where('level', 'siswa')
+            ->whereIn('kelas', ['X TKJ 1', 'X TKJ 2', 'X TKJ 3', 'X TKJ 4','X DKV 1', 'X DKV 2', 'X DKV 3', 'X DKV 4','X TKR 1', 'X TKR 2', 'X TKR 3', 'X TKR 4','X TSM 1', 'X TSM 2', 'X TSM 3','X OTR 1', 'X OTR 2', 'X OTR 3','X TP 1', 'X TP 2'])
+            ->get()
+            ->getResult();
+    }
+
+    public function getSiswa11(){
+        return $this->db->table('users')
+            ->where('level', 'siswa')
+            ->whereIn('kelas', ['XI TKJ 1', 'XI TKJ 2', 'XI TKJ 3', 'XI TKJ 4','XI DKV 1', 'XI DKV 2', 'XI DKV 3', 'XI DKV 4','XI TKR 1', 'XI TKR 2', 'XI TKR 3', 'XI TKR 4','XI TSM 1', 'XI TSM 2', 'XI TSM 3','XI OTR 1', 'XI OTR 2', 'XI OTR 3','XI TP 1', 'XI TP 2'])
+            ->get()
+            ->getResult();
+    }
+
+    public function getSiswa12(){
+        return $this->db->table('users')
+            ->where('level', 'siswa')
+            ->whereIn('kelas', ['XII TKJ 1', 'XII TKJ 2', 'XII TKJ 3', 'XII TKJ 4','XII DKV 1', 'XII DKV 2', 'XII DKV 3', 'XII DKV 4','XII TKR 1', 'XII TKR 2', 'XII TKR 3', 'XII TKR 4','XII TSM 1', 'XII TSM 2', 'XII TSM 3','XII OTR 1', 'XII OTR 2', 'XII OTR 3','XII TP 1', 'XII TP 2'])
             ->get()
             ->getResult();
     }
@@ -60,6 +79,20 @@ class UserModel extends Model
     //         return null;
     //     }
     // }
+
+    public function getMapelNama()
+    {
+        $id_mapel = $_GET['id'] ?? null;
+
+        if ($id_mapel !== null && is_numeric($id_mapel)) {
+            return $this->db->table('mapel')
+                        ->where('id_mapel', $id_mapel)
+                        ->get()
+                        ->getResult();
+        } else {
+            return null;
+        }
+    }
 
     public function getMapel()
     {

@@ -82,7 +82,7 @@
                                         <div class="basic-form">
                                             
                                                 <div class="form-group">
-                                                    <label class="text-label">Jawaban A</label>
+                                                    <!-- <label class="text-label">Jawaban A</label> -->
                                                     <select class="form-control" name="jawabanbenar_1" required="">
                                                         <option selected disabled>Pilih Jawaban Benar</option>
                                                         <option value="1">A</option>
@@ -141,7 +141,7 @@
                                         <div class="basic-form">
                                             
                                                 <div class="form-group">
-                                                    <label class="text-label">Jawaban A</label>
+                                                    <!-- <label class="text-label">Jawaban A</label> -->
                                                     <select class="form-control" name="jawabanbenar_2" required="">
                                                         <option selected disabled>Pilih Jawaban Benar</option>
                                                         <option value="1">A</option>
@@ -200,7 +200,7 @@
                                         <div class="basic-form">
                                             
                                                 <div class="form-group">
-                                                    <label class="text-label">Jawaban A</label>
+                                                    <!-- <label class="text-label">Jawaban A</label> -->
                                                     <select class="form-control" name="jawabanbenar_3" required="">
                                                         <option selected disabled>Pilih Jawaban Benar</option>
                                                         <option value="1">A</option>
@@ -258,7 +258,7 @@
                                         <div class="basic-form">
                                             
                                                 <div class="form-group">
-                                                    <label class="text-label">Jawaban A</label>
+                                                    <!-- <label class="text-label">Jawaban A</label> -->
                                                     <select class="form-control" name="jawabanbenar_4" required="">
                                                         <option selected disabled>Pilih Jawaban Benar</option>
                                                         <option value="1">A</option>
@@ -316,7 +316,7 @@
                                         <div class="basic-form">
                                             
                                                 <div class="form-group">
-                                                    <label class="text-label">Jawaban A</label>
+                                                    <!-- <label class="text-label">Jawaban A</label> -->
                                                     <select class="form-control" name="jawabanbenar_5" required="">
                                                         <option selected disabled>Pilih Jawaban Benar</option>
                                                         <option value="1">A</option>
@@ -374,7 +374,7 @@
                                         <div class="basic-form">
                                             
                                                 <div class="form-group">
-                                                    <label class="text-label">Jawaban A</label>
+                                                    <!-- <label class="text-label">Jawaban A</label> -->
                                                     <select class="form-control" name="jawabanbenar_6" required="">
                                                         <option selected disabled>Pilih Jawaban Benar</option>
                                                         <option value="1">A</option>
@@ -432,7 +432,7 @@
                                         <div class="basic-form">
                                             
                                                 <div class="form-group">
-                                                    <label class="text-label">Jawaban A</label>
+                                                    <!-- <label class="text-label">Jawaban A</label> -->
                                                     <select class="form-control" name="jawabanbenar_7" required="">
                                                         <option selected disabled>Pilih Jawaban Benar</option>
                                                         <option value="1">A</option>
@@ -490,7 +490,7 @@
                                         <div class="basic-form">
                                             
                                                 <div class="form-group">
-                                                    <label class="text-label">Jawaban A</label>
+                                                    <!-- <label class="text-label">Jawaban A</label> -->
                                                     <select class="form-control" name="jawabanbenar_8" required="">
                                                         <option selected disabled>Pilih Jawaban Benar</option>
                                                         <option value="1">A</option>
@@ -548,7 +548,7 @@
                                         <div class="basic-form">
                                             
                                                 <div class="form-group">
-                                                    <label class="text-label">Jawaban A</label>
+                                                    <!-- <label class="text-label">Jawaban A</label> -->
                                                     <select class="form-control" name="jawabanbenar_9" required="">
                                                         <option selected disabled>Pilih Jawaban Benar</option>
                                                         <option value="1">A</option>
@@ -606,7 +606,7 @@
                                         <div class="basic-form">
                                             
                                                 <div class="form-group">
-                                                    <label class="text-label">Jawaban A</label>
+                                                    <!-- <label class="text-label">Jawaban A</label> -->
                                                     <select class="form-control" name="jawabanbenar_10" required="">
                                                         <option selected disabled>Pilih Jawaban Benar</option>
                                                         <option value="1">A</option>

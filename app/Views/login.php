@@ -7,10 +7,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Gleek - Bootstrap Admin Dashboard HTML Template</title>
-    <!-- Favicon icon -->
-    <!-- <link rel="icon" type="image/png" sizes="16x16" href="../../assets/images/favicon.png"> -->
-    <!-- Custom Stylesheet -->
+
     <link href="<?= base_url(''); ?>main/css/style.css" rel="stylesheet">
+
+    <style>
+    .login-bg {
+        background-image: url('<?= base_url('assets/db/login.jpeg'); ?>');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+</style>
 
 </head>
 
@@ -46,7 +54,7 @@
                                         <input type="password" class="form-control" placeholder="Password" name="password" required="">
                                     </div>
                                     <div class="text-center mb-4 mt-5">
-                                    	<!-- <p class="text-center">Belum punya akun? Silahkan Daftar <a href="#">Disini</a></p> -->
+                                
                                         <button type="submit" class="btn btn-primary">Masuk</button>
                                     </div>
                                 </form>

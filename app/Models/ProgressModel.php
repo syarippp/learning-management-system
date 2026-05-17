@@ -21,6 +21,21 @@ class ProgressModel extends Model
         return $query->getResult();
     }
 
+    public function LihatProgress()
+{
+    $id_mat = $_GET['id_mat'] ?? null;
+
+    return $this->db->table('progress')
+        ->select('progress.*, users.nama_lengkap')
+        ->join('users', 'progress.id_users = users.id_users')
+        ->where('progress.id_materi_mapel', $id_mat)
+        ->get()
+        ->getResult();
+}
+
+
+
+
     public function getNilai($id_users, $id_mat)
     {
         $query = $this->db->table('progress')

@@ -28,7 +28,7 @@
                                             <th width="800">Nama Mapel</th>
                                             <th><center>Detail Mapel</center></th>
                                     </thead>
-
+ 
                                     <tbody style="color: black;">
                                         <?php $no = 1; ?>
                                         <?php foreach ($mapel_aktif as $ma): ?>

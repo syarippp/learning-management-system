@@ -9,6 +9,8 @@ use App\Models\MateriMapelModel;
 use App\Models\Pertanyaan;
 use App\Models\Jawaban;
 use App\Models\NilaiModel;
+use App\Models\ProgressModel;
+use App\Models\GuruMapelModel;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -38,31 +40,42 @@ class Guru extends BaseController
     }
 
     public function index()
-    {
-        // Check if user is logged in
-        if (!$this->isLoggedIn()) {
-            $session = session();
-            $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
-                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
-                                                aria-hidden="true">&times;</span>
-                                        </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
-            return redirect()->to("login");
-        }
-
-        $guruModel = new GuruModel();
-        $data['jumlah_mapel'] = $guruModel->countActiveMapels();
-        $data['materi_mapel'] = $guruModel->countActiveMateriMapels();
-        $data['total_kelas10'] = $guruModel->countActiveSiswaKelas10();
-        $data['total_kelas11'] = $guruModel->countActiveSiswaKelas11();
-        $data['total_kelas12'] = $guruModel->countActiveSiswaKelas12();
-
-        $header = view('guru/template/header');
-        $mainContent = view('guru/index', $data);
-        $footer = view('guru/template/footer');
-        $fullView = $header . $mainContent . $footer;
-
-        return $this->response->setBody($fullView);
+{
+    // Check if user is logged in
+    if (!$this->isLoggedIn()) {
+        $session = session();
+        $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
+            <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
+                    aria-hidden="true">&times;</span>
+            </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
+        return redirect()->to("login");
     }
+
+    $session = session();
+    $id_users = $session->get('id_users');
+
+    $guruModel = new GuruModel();
+    $guruMapelModel = new \App\Models\GuruMapelModel();
+
+    // ✅ Hitung jumlah mapel yang di-assign ke guru login
+    $jumlah_mapel = $guruMapelModel
+        ->where('id_users', $id_users)
+        ->countAllResults();
+
+    $data['jumlah_mapel']    = $jumlah_mapel;
+    $data['materi_mapel']    = $guruModel->countActiveMateriMapels();
+    $data['total_kelas10']   = $guruModel->countActiveSiswaKelas10();
+    $data['total_kelas11']   = $guruModel->countActiveSiswaKelas11();
+    $data['total_kelas12']   = $guruModel->countActiveSiswaKelas12();
+
+    $header = view('guru/template/header');
+    $mainContent = view('guru/index', $data);
+    $footer = view('guru/template/footer');
+    $fullView = $header . $mainContent . $footer;
+
+    return $this->response->setBody($fullView);
+}
+
 
     public function export_pdf()
     {
@@ -123,27 +136,28 @@ class Guru extends BaseController
 
     public function mapel()
     {
-        // Check if user is logged in
         if (!$this->isLoggedIn()) {
             $session = session();
             $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">
-                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
-                                                aria-hidden="true">&times;</span>
-                                        </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
+                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button> <strong>Belum Login</strong> <br><font style="font-size: 12px;">Silahkan Masukkan Username & Password Yang Benar.</font></div>');
             return redirect()->to("login");
         }
 
-        $guruModel = new GuruModel();
-        $data['mapel_aktif'] = $guruModel->getActiveMapels();
-        // print_r($data['jumlah_mapel']);
+        $session = session();
+        $id_users = $session->get('id_users');
 
-        $header = view('guru/template/header');
-        $mainContent = view('guru/mapel', $data);
-        $footer = view('guru/template/footer');
-        $fullView = $header . $mainContent . $footer;
+        $guruMapelModel = new \App\Models\GuruMapelModel();
+        $data['mapel_user'] = $guruMapelModel->getDetailMapelByUser($id_users); // update di sini
 
-        return $this->response->setBody($fullView);
+        $data['id'] = $this->request->getGet('id');
+
+        return view('guru/template/header')
+            . view('guru/detail_mapel', $data)
+            . view('guru/template/footer');
     }
+
+
 
     public function data_siswa()
     {
@@ -271,7 +285,10 @@ class Guru extends BaseController
         }
 
         $NilaiModel = new NilaiModel();
+        $ProgressModel = new ProgressModel();
+
         $data['lihat_nilai'] = $NilaiModel->LihatNilai();
+        $data['lihat_progress'] = $ProgressModel->LihatProgress();
         $data['id_dm'] = $this->request->getGet('id_dm');
         $data['id_mat'] = $this->request->getGet('id_mat');
 
@@ -281,7 +298,7 @@ class Guru extends BaseController
         $fullView = $header . $mainContent . $footer;
 
         return $this->response->setBody($fullView);
-    }
+    } 
 
     public function buat_posttest()
     {
@@ -371,9 +388,9 @@ class Guru extends BaseController
                 $MateriMapelModel->save($update_ada_posttest);
 
                 $session->setFlashdata('berhasilbuat_posttest', '<div class="alert alert-success alert-dismissible fade show">
-                                            <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
-                                                    aria-hidden="true">&times;</span>
-                                            </button> <strong>Selamat!</strong> Post Test berhasil dibuat.</div>');
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    aria-hidden="true">&times;</button> 
+                                                    <strong>Selamat!</strong> Post Test berhasil dibuat.</div>');
                 return redirect()->to("guru/akses_mapel?id_dm=".$id_dm);
             }
         }
@@ -481,34 +498,56 @@ class Guru extends BaseController
    }
 
    public function tambah_detail_mapel() {
-      $detailmapelModel = new DetailMapelModel();
+    $detailmapelModel = new DetailMapelModel();
+    $guruMapelModel = new \App\Models\GuruMapelModel(); // Pastikan model ini sudah ada
 
-      $result = $detailmapelModel->insert([
-         'id_mapel'=>$this->request->getPost("id_mapel"),
-         'id_users'=>$this->request->getPost("id_users"),
-         'kelas_mapel'=>$this->request->getPost("kelas_mapel"),
-         'tahun_mapel'=>$this->request->getPost("tahun_mapel"),
-         'status'=>"aktif"
-      ]);
+    $id_mapel = $this->request->getPost("id_mapel");
+    $id_users = $this->request->getPost("id_users");
+    $kelas_mapel = $this->request->getPost("kelas_mapel");
+    $tahun_mapel = $this->request->getPost("tahun_mapel");
 
-      if($result==true) {
-            $session = session();
-            $session->setFlashdata('berhasiltambahdetailmapel', '<div class="alert alert-success alert-dismissible fade show">
-                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span
-                                                aria-hidden="true">&times;</span>
-                                        </button> <strong>Selamat!</strong> Mapel baru berhasil ditambahkan.</div>');
-            $referer = $this->request->getServer('HTTP_REFERER'); // Simpan URL referer
-            return redirect()->to($referer); // Arahkan kembali ke URL referer
-        }else{
-            $session = session();
-            $session->setFlashdata('gagalbuatakun', '<div class="alert alert-danger">
-                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                          <i class="icon-line-lock"></i>Maaf! Akun Gagal Dibuat.<br>Silahkan Coba Lagi.</a>
-                        </div>');
-            return redirect()->to("guru/index");
-        }
+    $dataDetail = [
+        'id_mapel'     => $id_mapel,
+        'id_users'     => $id_users,
+        'kelas_mapel'  => $kelas_mapel,
+        'tahun_mapel'  => $tahun_mapel,
+        'status'       => "aktif"
+    ];
 
-   }
+    $result = $detailmapelModel->insert($dataDetail);
+
+    if ($result) {
+        // Ambil ID detail mapel yang baru saja ditambahkan
+        $id_detail_mapel = $detailmapelModel->getInsertID();
+
+        // Simpan ke tabel guru_mapel
+        $guruMapelModel->insert([
+            'id_users' => $id_users,
+            'id_detail_mapel' => $id_detail_mapel
+        ]);
+
+        $session = session();
+        $session->setFlashdata('berhasiltambahdetailmapel', '
+            <div class="alert alert-success alert-dismissible fade show">
+                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button> 
+                <strong>Selamat!</strong> Mapel baru dan assign guru berhasil ditambahkan.
+            </div>
+        ');
+        return redirect()->to($this->request->getServer('HTTP_REFERER'));
+    } else {
+        $session = session();
+        $session->setFlashdata('gagalbuatakun', '
+            <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <i class="icon-line-lock"></i>Maaf! Gagal menambahkan data. Silakan coba lagi.
+            </div>
+        ');
+        return redirect()->to("guru/index");
+    }
+}
+
 
    public function tambah_materi_mapel() {
       $materimapelModel = new MateriMapelModel();
@@ -546,54 +585,50 @@ class Guru extends BaseController
    }
 
    public function edit_materi()
-    {
-        $MateriMapelModel = new MateriMapelModel();
+{
+    $MateriMapelModel = new MateriMapelModel();
 
-        $id_mat = $this->request->getPost('id_mat');
-        $pendahuluan = $this->request->getPost('myTextarea');
-        $file_materi = $this->request->getFile('file_materi');
-        $video_materi = $this->request->getPost('video_materi');
+    $id_mat = $this->request->getPost('id_mat');
+    $pendahuluan = $this->request->getPost('myTextarea');
+    $file_materi = $this->request->getFile('file_materi');
+    $video_materi = $this->request->getPost('video_materi');
+    $waktu_post_test = $this->request->getPost('waktu_post_test'); // ✅ Ambil dari input form
 
-        // Array untuk menyimpan data yang akan diupdate
-        $data = [
-            'pendahuluan' => $pendahuluan,
-            'video_materi' => $video_materi,
-        ];
+    // Array untuk menyimpan data yang akan diupdate
+    $data = [
+        'pendahuluan' => $pendahuluan,
+        'video_materi' => $video_materi,
+        'waktu_post_test' => $waktu_post_test // ✅ Masukkan ke array untuk update
+    ];
 
-        // Periksa apakah ada file yang diupload
-        if ($file_materi && $file_materi->isValid() && !$file_materi->hasMoved()) {
-            // Validasi tipe file (misalnya hanya PDF)
-            if ($file_materi->getClientMimeType() == 'application/pdf') {
-                // Tentukan nama file baru (misalnya menggunakan nama asli atau generate nama unik)
-                $newName = $file_materi->getRandomName();
-
-                // Pindahkan file ke folder tujuan (misalnya 'public/pdf')
-                if ($file_materi->move(FCPATH . 'pdf', $newName)) {
-                    // Simpan nama file ke array data
-                    $data['materi'] = $newName;
-                } else {
-                    // Handle error jika file gagal dipindahkan
-                    log_message('error', 'Failed to move the file to destination');
-                    return redirect()->back()->with('error', 'Gagal memindahkan file.');
-                }
+    // Periksa apakah ada file yang diupload
+    if ($file_materi && $file_materi->isValid() && !$file_materi->hasMoved()) {
+        // Validasi tipe file (misalnya hanya PDF)
+        if ($file_materi->getClientMimeType() == 'application/pdf') {
+            $newName = $file_materi->getRandomName();
+            if ($file_materi->move(FCPATH . 'pdf', $newName)) {
+                $data['materi'] = $newName;
             } else {
-                // Handle error jika tipe file tidak sesuai
-                return redirect()->back()->with('error', 'File harus berupa PDF.');
+                log_message('error', 'Failed to move the file to destination');
+                return redirect()->back()->with('error', 'Gagal memindahkan file.');
             }
-        }
-
-        // Update data di database
-        if ($MateriMapelModel->update($id_mat, $data)) {
-            $session = session();
-            $session->setFlashdata('berhasilupdatemapel', '<div class="alert alert-success">
-                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                          <i class="icon-line-lock"></i><b>Selamat!</b> Materi pertemuan ini berhasil di update.</a>
-                        </div>');
-            return redirect()->back()->with('success', 'Materi berhasil diupdate.');
         } else {
-            return redirect()->back()->with('error', 'Gagal mengupdate data.');
+            return redirect()->back()->with('error', 'File harus berupa PDF.');
         }
     }
+
+    // Update data di database
+    if ($MateriMapelModel->update($id_mat, $data)) {
+        session()->setFlashdata('berhasilupdatemapel', '<div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <i class="icon-line-lock"></i><b>Selamat!</b> Materi pertemuan ini berhasil di update.
+        </div>');
+        return redirect()->back()->with('success', 'Materi berhasil diupdate.');
+    } else {
+        return redirect()->back()->with('error', 'Gagal mengupdate data.');
+    }
+}
+
 
     public function updateJawaban($dataJawaban)
     {
@@ -622,87 +657,7 @@ class Guru extends BaseController
         }
     }
 
-    // public function edit_posttest()
-    // {
-    //     // Model instances
-    //     $Pertanyaan = new Pertanyaan();
-    //     $Jawaban = new Jawaban();
-
-    //     $id_dm = $this->request->getGet('id_dm');
-    //     $id_mat = $this->request->getGet('id_mat');
-
-    //     // Array untuk menyimpan data pertanyaan dan jawaban
-    //     $pertanyaanData = [];
-    //     $jawabanData = [];
-
-    //     // Kumpulkan dan validasi data pertanyaan (10 pertanyaan)
-    //     for ($i = 0; $i < 10; $i++) {
-    //         $idPertanyaan = $this->request->getPost('idp' . $i);
-    //         $pertanyaanText = $this->request->getPost('pertanyaan' . $i);
-
-    //         if ($idPertanyaan && $pertanyaanText) {
-    //             $pertanyaanData[] = [
-    //                 'id_pertanyaan' => $idPertanyaan,
-    //                 'pertanyaan' => $pertanyaanText
-    //             ];
-    //         }
-    //     }
-
-    //     // Kumpulkan dan validasi data jawaban (40 jawaban, 4 jawaban untuk setiap 10 pertanyaan)
-    //     for ($i = 0; $i < 10; $i++) {
-    //         // Inisialisasi flag untuk menandai apakah jawaban benar sudah ditemukan
-    //         $correctAnswerFound = false;
-
-    //         for ($j = 0; $j < 4; $j++) {
-    //             $idJawaban = $this->request->getPost('idj' . ($i * 4 + $j));
-    //             $jawabanText = $this->request->getPost('jawaban_' . $i . chr(97 + $j)); // chr(97) adalah 'a', chr(98) adalah 'b', dst.
-    //             $isCorrect = ($this->request->getPost('jawabanbenar_' . $i) == $j) ? 1 : 0;
-
-    //             if ($idJawaban && $jawabanText) {
-    //                 // Jika jawaban ini adalah jawaban benar
-    //                 if ($isCorrect) {
-    //                     // Atur nilai value menjadi 1
-    //                     $jawabanData[] = [
-    //                         'id_jawaban' => $idJawaban,
-    //                         'jawaban' => $jawabanText,
-    //                         'value' => 1 // Nilai jawaban benar
-    //                     ];
-    //                     // Set flag untuk menandai bahwa jawaban benar sudah ditemukan
-    //                     $correctAnswerFound = true;
-    //                 } else {
-    //                     // Jika jawaban ini bukan jawaban benar
-    //                     // Atur nilai value menjadi 0
-    //                     $jawabanData[] = [
-    //                         'id_jawaban' => $idJawaban,
-    //                         'jawaban' => $jawabanText,
-    //                         'value' => 0 // Nilai jawaban bukan benar
-    //                     ];
-    //                 }
-    //             }
-    //         }
-
-    //         // Jika tidak ada jawaban benar yang ditemukan, tetapi setidaknya ada satu jawaban
-    //         // maka atur nilai value jawaban pertama menjadi 1
-    //         if (!$correctAnswerFound && count($jawabanData) >= 1) {
-    //             $jawabanData[0]['value'] = 1;
-    //         }
-    //     }
-
-    //     // Update pertanyaan di database
-    //     foreach ($pertanyaanData as $data) {
-    //         $updateResult = $Pertanyaan->update($data['id_pertanyaan'], ['pertanyaan' => $data['pertanyaan']]);
-    //         if (!$updateResult) {
-    //             echo "Gagal memperbarui pertanyaan dengan ID: " . $data['id_pertanyaan'];
-    //             exit;
-    //         }
-    //     }
-
-    //     // Update jawaban di database
-    //     $this->updateJawaban($jawabanData);
-
-    //     // Redirect setelah update berhasil
-    //     return redirect()->to("guru/lihat_posttest?id_mat=".$id_mat."&id_dm=".$id_dm);
-    // }
+    
 
     public function edit_posttest()
     {
@@ -758,6 +713,14 @@ class Guru extends BaseController
 
         // Update jawaban di database
         $this->updateJawaban($jawabanData);
+
+        $session = session();
+        $session->setFlashdata('berhasileditposttest', '<div class="alert alert-success alert-dismissible fade show">
+         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
+            <strong>Berhasil!</strong> Soal berhasil diperbarui.
+        </div>');
+
 
         // Redirect setelah update berhasil
         return redirect()->to("guru/lihat_posttest?id_mat=".$id_mat."&id_dm=".$id_dm);
@@ -893,6 +856,150 @@ class Guru extends BaseController
         }
     }
 
+//     public function buatkan_soal()
+// {
+//     $materi = $this->request->getPost('materi');
+//     $prompt = $prompt = "Buatkan 1 soal pilihan ganda tentang materi berikut:\n\n" . strip_tags($materi) . "\n\n" .
+//     "Format soal:\n" .
+//     "1. Pertanyaan?\n" .
+//     "A. Pilihan A\n" .
+//     "B. Pilihan B\n" .
+//     "C. Pilihan C\n" .
+//     "D. Pilihan D\n" .
+//     "Jawaban: A\n\n" .
+//     "Pastikan hanya ada 4 pilihan A-D saja, tanpa E atau F.";
+
+//     $payload = json_encode([
+//         "model" => "gemma3:1b",
+//         "prompt" => $prompt,
+//         "stream" => false
+//     ]);
+
+//     $ch = curl_init('http://localhost:11434/api/generate');
+//     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+//     curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+//     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//     curl_setopt($ch, CURLOPT_HTTPHEADER, [
+//         'Content-Type: application/json',
+//         'Content-Length: ' . strlen($payload)
+//     ]);
+
+//     $result = curl_exec($ch);
+//     curl_close($ch);
+
+//     $response = json_decode($result, true);
+
+//     return $this->response->setJSON([
+//         'soal' => $response['response'] ?? 'Gagal menghasilkan soal'
+//     ]);
+// }
+
+public function buatkan_soal()
+{
+    helper('groq');
+
+    try {
+        $materi        = $this->request->getPost('materi');
+        $id_mat        = $this->request->getPost('id_mat');
+        $jumlah_soal   = $this->request->getPost('jumlah_soal') ?? 5;
+        $waktu_post_test = $this->request->getPost('waktu_post_test') ?? 30; // 🆕 Ambil input waktu pengerjaan
+
+        if (empty($materi) || empty($id_mat)) {
+            return $this->response->setJSON([
+                'jumlah' => 0,
+                'error' => 'Materi atau ID materi kosong.'
+            ]);
+        }
+
+        $output = generateSoalDariGroq($materi, $jumlah_soal, $waktu_post_test);
+        file_put_contents(WRITEPATH . 'logs/output_terbaru.txt', $output);
+        $jumlah = count($this->parseSoal($output, $id_mat));
+
+        // 🆕 Simpan waktu pengerjaan ke tabel materi_mapel
+        $db = \Config\Database::connect();
+        $db->table('materi_mapel')
+           ->where('id_materi_mapel', $id_mat)
+           ->update([
+               'post_test' => 'Ada',
+               'waktu_post_test' => $waktu_post_test // ✅ hanya ini ditambahkan
+           ]);
+
+        return $this->response->setJSON([
+            'jumlah'  => $jumlah,
+            'message' => "$jumlah soal berhasil dibuat dan disimpan ke database.",
+            'preview' => substr($output, 0, 300)
+        ]);
+
+    } catch (\Throwable $e) {
+        return $this->response->setJSON([
+            'jumlah' => 0,
+            'error'  => $e->getMessage(),
+            'line'   => $e->getLine(),
+            'file'   => $e->getFile()
+        ]);
+    }
+}
+
+
+
+
+private function parseSoal($text, $id_mat)
+{
+    $db = \Config\Database::connect();
+    $pertanyaanModel = $db->table('pertanyaan');
+    $jawabanModel = $db->table('jawaban');
+
+    $soal_blocks = preg_split('/\n(?=\d+\.\s)/', trim($text));
+    $inserted = [];
+
+    foreach ($soal_blocks as $block) {
+        $lines = explode("\n", trim($block));
+        if (count($lines) < 3) continue;
+
+        $pertanyaan = '';
+        $opsi = [];
+        $jawaban_benar_huruf = '';
+        $jawaban_benar_isi = '';
+
+        // Ambil pertanyaan (baris pertama)
+        $pertanyaan = trim(preg_replace('/^\d+\.\s*/', '', array_shift($lines)));
+        
+        // Proses sisa baris
+        foreach ($lines as $line) {
+            if (preg_match('/^([A-D])\)\s+(.*)/', trim($line), $match)) {
+                $opsi[$match[1]] = trim($match[2]);
+            } elseif (preg_match('/^Jawaban:\s*([A-D])\)\s+(.*)/', trim($line), $match)) {
+                $jawaban_benar_huruf = $match[1];
+                $jawaban_benar_isi = trim($match[2]);
+            }
+        }
+        file_put_contents(WRITEPATH . 'logs/soal.txt', $pertanyaan.'---'.count($opsi).$jawaban_benar_huruf);
+        
+        if ($pertanyaan && count($opsi) >= 2 && $jawaban_benar_huruf && isset($opsi[$jawaban_benar_huruf])) {
+            // Simpan pertanyaan
+            $pertanyaanModel->insert([
+                'id_materi_mapel' => $id_mat,
+                'pertanyaan' => $pertanyaan
+            ]);
+
+            $id_pertanyaan = $db->insertID();
+
+            // Simpan jawaban
+            foreach ($opsi as $huruf => $isi) {
+                $jawabanModel->insert([
+                    'id_pertanyaan' => $id_pertanyaan,
+                    'jawaban' => $isi,
+                    'value' => ($huruf == $jawaban_benar_huruf) ? 1 : 0
+                ]);
+            }
+
+            $inserted[] = $pertanyaan;
+        }
+    }
+    return $inserted;
+}
+
+
     // public function hapus_mapel()
     // {
     //     $id_mapel = $this->request->getGet('id_mapel');
@@ -910,6 +1017,7 @@ class Guru extends BaseController
     //     }
     // }
 
+    
     public function goBack()
     {
         $referer = $this->request->getServer('HTTP_REFERER'); // Simpan URL referer

@@ -41,7 +41,7 @@
                                             <td><center><?php echo $ma->kelas_mapel; ?></center></td>
                                             <td><center><?php echo $ma->tahun_mapel; ?></center></td>
                                             <td><center><?php echo $ma->nama_lengkap; ?></center></td>
-                                            <td><center><a href="<?= base_url('siswa/akses_mapel?id_dm='.$ma->id_detail_mapel.''); ?>"><button type="button" class="btn btn-success">Akses Mapel <span class="btn-icon-right"><i
+                                            <td><center><a href="<?= base_url('siswa/akses_mapel?id_dm='.$ma->id_detail_mapel.''); ?>"><button type="button" class="btn btn-success">Buka <span class="btn-icon-right"><i
                                                 class="fa fa-arrow-circle-right "></i></span>
                                             </button></a></center></td>
                                         </tr>

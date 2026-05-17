@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Dashboard - Guru</title>
+    <title>Dashboard - Admin</title>
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="../../assets/images/favicon.png">
     <!-- Custom Stylesheet -->
@@ -202,10 +202,14 @@
                             <i class="mdi mdi-view-dashboard"></i><span class="nav-text">Dashboard</span>
                         </a>
                     </li>
-                    <li class="mega-menu mega-menu-lg">
-                        <a href="<?php echo base_url('admin/data_mapel'); ?>">
-                            <i class="mdi mdi-book"></i><span class="nav-text">Data Mapel</span>
-                        </a>
+                    
+                    <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i class="mdi mdi-account-multiple"></i><span class="nav-text">Data Mapel</span> <span class="badge bg-dpink text-white nav-badge">02</span></a>
+                        <ul aria-expanded="false">
+                            <li><a href="<?php echo base_url('admin/data_mapel'); ?>">Data Mapel</a>
+                            </li>
+                            <li><a href="<?php echo base_url('admin/assign_guru'); ?>">Assign Guru</a>
+                            </li>
+                        </ul>
                     </li>
                     <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i class="mdi mdi-account-multiple"></i><span class="nav-text">Data Guru & Siswa</span> <span class="badge bg-dpink text-white nav-badge">02</span></a>
                         <ul aria-expanded="false">

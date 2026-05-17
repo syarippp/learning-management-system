@@ -11,6 +11,8 @@
     <!-- Custom Stylesheet -->
     <link href="<?= base_url() ?>main/css/style.css" rel="stylesheet">
     <link href="<?= base_url() ?>assets/plugins/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
 
 <body>

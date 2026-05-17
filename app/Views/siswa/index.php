@@ -1,6 +1,13 @@
-        <!--**********************************
-            Content body start
-        ***********************************-->
+        <style>
+            body {
+                background-image: url('<?= base_url('assets/db/siswa.jpeg'); ?>');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+            }
+        </style>
+
         <div class="content-body">
             <div class="container-fluid">
                 <div class="row page-titles">
@@ -14,7 +21,7 @@
                             <li class="breadcrumb-item active">Dashboard</li>
                         </ol>
                     </div>
-                </div>
+                </div> 
 
                 <div class="row">
                     <div class="col-lg-12 col-xxl-12 col-xl-5">
@@ -32,25 +39,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="col-sm-6 col-lg-6 col-xl-6 col-xxl-6">
-                                <div class="card">
-                                    <div class="card-body widget-school-stat bg-2 rounded">
-                                        <div class="text">
-                                            <h2>???</h2>
-                                            <p>Post Test</p>
-                                        </div>
-                                        <div class="icon">
-                                            <span><i class="fa fa-pencil"></i></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- #/ container -->
         </div>
-        <!--**********************************
-            Content body end
-        ***********************************-->

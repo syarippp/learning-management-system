@@ -60,7 +60,7 @@
                                     <thead>
                                         <tr>
                                             <th width="">No</th>
-                                            <th width="">NISN</th>
+                                            <th width="">NIS</th>
                                             <th width="">Nama Lengkap</th>
                                             <th width="">Kelas</th>
                                             <th width="">Alamat</th>
@@ -73,7 +73,7 @@
                                         <?php foreach ($getsiswa as $ma): ?>
                                         <tr>
                                             <td><?php echo $no; ?></center></td>
-                                            <td><?php echo $ma->nisn; ?></td>
+                                            <td><?php echo $ma->nis; ?></td>
                                             <td><?php echo $ma->nama_lengkap; ?></td>
                                             <td><?php echo $ma->kelas; ?></td>
                                             <td><?php echo $ma->alamat; ?></td>
@@ -89,7 +89,7 @@
                                     <tfoot>
                                         <tr>
                                             <th width="">No</th>
-                                            <th width="">NISN</th>
+                                            <th width="">NIS</th>
                                             <th width="">Nama Lengkap</th>
                                             <th width="">Kelas</th>
                                             <th width="">Alamat</th>

@@ -56,7 +56,7 @@ class GuruModel extends Model
 
     public function countActiveMapels()
     {
-        return $this->db->table('detail_mapel')
+        return $this->db->table('mapel')
             ->countAllResults();
     }
 
@@ -69,21 +69,85 @@ class GuruModel extends Model
     public function countActiveSiswaKelas10()
     {
         return $this->db->table('users')
-        	->where('kelas', '10')
+            ->groupStart()
+                ->where('kelas', 'X TKJ 1')
+                ->orWhere('kelas', 'X TKJ 2')
+                ->orWhere('kelas', 'X TKJ 3')
+                ->orWhere('kelas', 'X TKJ 4')
+                ->orWhere('kelas', 'X DKV 1')
+                ->orWhere('kelas', 'X DKV 2')
+                ->orWhere('kelas', 'X DKV 3')
+                ->orWhere('kelas', 'X DKV 4')
+                ->orWhere('kelas', 'X TKR 1')
+                ->orWhere('kelas', 'X TKR 2')
+                ->orWhere('kelas', 'X TKR 3')
+                ->orWhere('kelas', 'X TKR 4')
+                ->orWhere('kelas', 'X TSM 1')
+                ->orWhere('kelas', 'X TSM 2')
+                ->orWhere('kelas', 'X TSM 3')
+                ->orWhere('kelas', 'X OTR 1')
+                ->orWhere('kelas', 'X OTR 2')
+                ->orWhere('kelas', 'X OTR 3')
+                ->orWhere('kelas', 'X TP 1')
+                ->orWhere('kelas', 'X TP 2')
+                
+            ->groupEnd()
             ->countAllResults();
     }
 
     public function countActiveSiswaKelas11()
     {
         return $this->db->table('users')
-        	->where('kelas', '11')
+            ->groupStart()
+                ->where('kelas', 'XI TKJ 1')
+                ->orWhere('kelas', 'XI TKJ 2')
+                ->orWhere('kelas', 'XI TKJ 3')
+                ->orWhere('kelas', 'XI TKJ 4')
+                ->orWhere('kelas', 'XI DKV 1')
+                ->orWhere('kelas', 'XI DKV 2')
+                ->orWhere('kelas', 'XI DKV 3')
+                ->orWhere('kelas', 'XI DKV 4')
+                ->orWhere('kelas', 'XI TKR 1')
+                ->orWhere('kelas', 'XI TKR 2')
+                ->orWhere('kelas', 'XI TKR 3')
+                ->orWhere('kelas', 'XI TKR 4')
+                ->orWhere('kelas', 'XI TSM 1')
+                ->orWhere('kelas', 'XI TSM 2')
+                ->orWhere('kelas', 'XI TSM 3')
+                ->orWhere('kelas', 'XI OTR 1')
+                ->orWhere('kelas', 'XI OTR 2')
+                ->orWhere('kelas', 'XI OTR 3')
+                ->orWhere('kelas', 'XI TP 1')
+                ->orWhere('kelas', 'XI TP 2')
+            ->groupEnd()
             ->countAllResults();
     }
 
     public function countActiveSiswaKelas12()
     {
         return $this->db->table('users')
-        	->where('kelas', '12')
+            ->groupStart()
+                ->where('kelas', 'XII TKJ 1')
+                ->orWhere('kelas', 'XII TKJ 2')
+                ->orWhere('kelas', 'XII TKJ 3')
+                ->orWhere('kelas', 'XII TKJ 4')
+                ->orWhere('kelas', 'XII DKV 1')
+                ->orWhere('kelas', 'XII DKV 2')
+                ->orWhere('kelas', 'XII DKV 3')
+                ->orWhere('kelas', 'XII DKV 4')
+                ->orWhere('kelas', 'XII TKR 1')
+                ->orWhere('kelas', 'XII TKR 2')
+                ->orWhere('kelas', 'XII TKR 3')
+                ->orWhere('kelas', 'XII TKR 4')
+                ->orWhere('kelas', 'XII TSM 1')
+                ->orWhere('kelas', 'XII TSM 2')
+                ->orWhere('kelas', 'XII TSM 3')
+                ->orWhere('kelas', 'XII OTR 1')
+                ->orWhere('kelas', 'XII OTR 2')
+                ->orWhere('kelas', 'XII OTR 3')
+                ->orWhere('kelas', 'XII TP 1')
+                ->orWhere('kelas', 'XII TP 2')
+            ->groupEnd()
             ->countAllResults();
     }
 
@@ -179,6 +243,12 @@ class GuruModel extends Model
             return null;
         }
     }
+
+    public function getOnlyGuru()
+    {
+    return $this->where('level', 'guru')->findAll();  // Ambil semua user yang level-nya guru
+    }
+
 
     public function getMateriMapel()
     {

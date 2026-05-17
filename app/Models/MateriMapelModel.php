@@ -10,7 +10,7 @@ class MateriMapelModel extends Model
     protected $primaryKey = "id_materi_mapel";
     protected $returnType = "object";
     protected $useTimestamps = false;
-    protected $allowedFields = ['id_materi_mapel', 'id_detail_mapel', 'pertemuan', 'pendahuluan', 'materi', 'video_materi', 'post_test'];
+    protected $allowedFields = ['id_materi_mapel', 'id_detail_mapel', 'pertemuan', 'pendahuluan', 'materi', 'video_materi', 'post_test','waktu_post_test'];
 
 
     public function countMateriMapel($id_detail_mapel)

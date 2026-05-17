@@ -33,8 +33,8 @@
                                         <div class="basic-form">
                                             <form action="<?= base_url('admin/proses_tambah_siswa') ?>" method="post">
                                                 <div class="form-group">
-                                                    <label class="text-label">Masukkan NISN</label>
-                                                    <input type="text" name="nisn" class="form-control" placeholder="NISN" required>
+                                                    <label class="text-label">Masukkan NIS</label>
+                                                    <input type="text" name="nis" class="form-control" placeholder="NIS" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="text-label">Masukkan Nama Lengkap</label>
@@ -44,18 +44,18 @@
                                                     <label class="text-label">Masukkan Kelas</label>
                                                     <select class="form-control" name="kelas" required="">
                                                         <option selected disabled>Pilih Kelas</option>
-                                                        <option value="X TKJ A">X TKJ A</option>
-                                                        <option value="X TKJ B">X TKJ B</option>
-                                                        <option value="X TKJ C">X TKJ C</option>
-                                                        <option value="X TKJ D">X TKJ D</option>
-                                                        <option value="XI TKJ A">XI TKJ A</option>
-                                                        <option value="XI TKJ B">XI TKJ B</option>
-                                                        <option value="XI TKJ C">XI TKJ C</option>
-                                                        <option value="XI TKJ D">XI TKJ D</option>
-                                                        <option value="XII TKJ A">XII TKJ A</option>
-                                                        <option value="XII TKJ B">XII TKJ B</option>
-                                                        <option value="XII TKJ C">XII TKJ C</option>
-                                                        <option value="XII TKJ D">XII TKJ D</option>
+                                                        <option value="X TKJ 1">X TKJ 1</option>
+                                                        <option value="X TKJ 2">X TKJ 2</option>
+                                                        <option value="X TKJ 3">X TKJ 3</option>
+                                                        <option value="X TKJ 4">X TKJ 4</option>
+                                                        <option value="XI TKJ 1">XI TKJ 1</option>
+                                                        <option value="XI TKJ 2">XI TKJ 2</option>
+                                                        <option value="XI TKJ 3">XI TKJ 3</option>
+                                                        <option value="XI TKJ 4">XI TKJ 4</option>
+                                                        <option value="XII TKJ 1">XII TKJ 1</option>
+                                                        <option value="XII TKJ 2">XII TKJ 2</option>
+                                                        <option value="XII TKJ 3">XII TKJ 3</option>
+                                                        <option value="XII TKJ 4">XII TKJ 4</option>
                                                     </select>
                                                 </div>
                                                 <div class="form-group">

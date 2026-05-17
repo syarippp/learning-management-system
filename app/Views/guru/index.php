@@ -1,3 +1,13 @@
+        <style>
+            body {
+                background-image: url('<?= base_url('assets/db/guru.jpeg'); ?>');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+            }
+        </style>
+        
         <!--**********************************
             Content body start
         ***********************************-->
@@ -62,26 +72,12 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 col-lg-6 col-xl-6 col-xxl-6">
+                            <div class="col-sm-12 col-lg-12 col-xl-12 col-xxl-12">
                                 <div class="card">
                                     <div class="card-body widget-school-stat bg-2 rounded">
                                         <div class="text">
                                             <h2><?php echo $jumlah_mapel; ?></h2>
                                             <p>Total Mata Pelajaran</p>
-                                        </div>
-                                        <div class="icon">
-                                            <span><i class="fa fa-book"></i></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6 col-lg-6 col-xl-6 col-xxl-6">
-                                <div class="card">
-                                    <div class="card-body widget-school-stat bg-2 rounded">
-                                        <div class="text">
-                                            <h2><?php echo $materi_mapel; ?></h2>
-                                            <p>Total Materi Mapel</p>
                                         </div>
                                         <div class="icon">
                                             <span><i class="fa fa-book"></i></span>

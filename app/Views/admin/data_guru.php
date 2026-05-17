@@ -14,7 +14,7 @@
                             <li class="breadcrumb-item active">Tambah Data Guru</li>
                         </ol>
                     </div>
-                </div>
+                </div> 
 
                 <div class="row">
                     <div class="col-lg-12 col-xxl-12 col-xl-12">

@@ -8,4 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 $routes->get('/', 'Home::daftar');
 $routes->get('/', 'Login::index');
+$routes->post('guru/buatkan_soal', 'Guru::buatkan_soal');
 $routes->setAutoRoute(true);
+
+

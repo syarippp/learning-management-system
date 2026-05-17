@@ -5,7 +5,8 @@ use App\Models\GuruModel;
 use App\Models\UserModel;
 use App\Models\DetailMapelModel;
 use App\Models\MapelModel;
-use App\Models\MateriMapelModel;
+use App\Models\MateriMapelModel; 
+use App\Models\GuruMapelModel; 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
@@ -94,6 +95,92 @@ class Admin extends BaseController
             return redirect()->to("admin/data_mapel");
         }
     }
+
+    public function assign_guru()
+{
+    if (!$this->isLoggedIn()) {
+        $session = session();
+        $session->setFlashdata('belumlogin', '<div class="alert alert-danger alert-dismissible fade show">...</div>');
+        return redirect()->to("login");
+    }
+
+    $guruModel = new \App\Models\GuruModel();
+    $detailMapelModel = new \App\Models\DetailMapelModel();
+    $guruMapelModel = new \App\Models\GuruMapelModel();
+
+    $data['list_guru'] = $guruModel->where('level', 'guru')->findAll();
+    $data['list_detail_mapel'] = $detailMapelModel
+    ->join('mapel', 'mapel.id_mapel = detail_mapel.id_mapel')
+    ->select('detail_mapel.*, mapel.nama_mapel')
+    ->findAll();
+
+    $data['assigned'] = $guruMapelModel->getAssignedGuru(); // ← Tambahan
+
+    $header = view('admin/template/header');
+    $mainContent = view('admin/assign_guru', $data);
+    $footer = view('admin/template/footer');
+
+    return $this->response->setBody($header . $mainContent . $footer);
+}
+
+
+
+    public function assign_guru_simpan()
+{
+    $id_users = $this->request->getPost('id_users');
+    $id_detail_mapel = $this->request->getPost('id_detail_mapel');
+
+    $guruMapelModel = new \App\Models\GuruMapelModel();
+    $guruMapelModel->insert([
+        'id_users' => $id_users,
+        'id_detail_mapel' => $id_detail_mapel
+    ]);
+
+    return redirect()->to(base_url('admin/assign_guru'))->with('success', 'Guru berhasil diassign ke mapel.');
+}
+
+public function hapus_assign_guru()
+{
+    $id = $this->request->getGet('id'); // id dari tabel guru_mapel
+
+    $db = \Config\Database::connect();
+
+    // Ambil data guru_mapel yang akan dihapus
+    $guruMapel = $db->table('guru_mapel')->where('id_guru_mapel', $id)->get()->getRow();
+
+    if ($guruMapel) {
+        // Simpan id_detail_mapel sebelum guru_mapel dihapus
+        $id_detail_mapel = $guruMapel->id_detail_mapel;
+
+        // Hapus guru_mapel
+        $db->table('guru_mapel')->where('id_guru_mapel', $id)->delete();
+
+        // Hapus juga detail_mapel yang terkait
+        $db->table('detail_mapel')->where('id_detail_mapel', $id_detail_mapel)->delete();
+
+        return redirect()->to(base_url('admin/assign_guru'))->with('success', 'Data assign dan detail mapel berhasil dihapus.');
+    } else {
+        return redirect()->to(base_url('admin/assign_guru'))->with('success', 'Data assign tidak ditemukan.');
+    }
+}
+
+public function update_assign_guru()
+{
+    $id = $this->request->getPost('id_guru_mapel');
+    $id_users = $this->request->getPost('id_users');
+    $id_detail_mapel = $this->request->getPost('id_detail_mapel');
+
+    $guruMapelModel = new \App\Models\GuruMapelModel();
+
+    $guruMapelModel->update($id, [
+        'id_users' => $id_users,
+        'id_detail_mapel' => $id_detail_mapel,
+    ]);
+
+    return redirect()->to(base_url('admin/assign_guru'))->with('success', 'Data assign berhasil diperbarui.');
+}
+
+
 
     public function tambah_guru()
     {
@@ -188,9 +275,17 @@ class Admin extends BaseController
         // Ambil data dari form
         $data = [
             'nama_lengkap' => $this->request->getPost('nama_lengkap'),
+            'kelas' => $this->request->getPost('kelas'),
             'alamat' => $this->request->getPost('alamat'),
             'no_hp' => $this->request->getPost('no_hp'),
+            'username' => $this->request->getPost('username')
         ];
+
+        // Cek jika password diubah
+        $password = $this->request->getPost('password');
+        if (!empty($password)) {
+            $data['password'] = password_hash($password, PASSWORD_DEFAULT);
+        }
 
         // Proses upload gambar
         $profilPicture = $this->request->getFile('profil_picture');
@@ -320,7 +415,7 @@ class Admin extends BaseController
              'username'=>$this->request->getPost("username"),
              'password'=> $hashedPassword,
              'nama_lengkap'=>$this->request->getPost("nama_lengkap"),
-             'nisn'=>$this->request->getPost("nisn"),
+             'nis'=>$this->request->getPost("nis"),
              'no_hp'=>$this->request->getPost("no_hp"),
              'alamat'=>$this->request->getPost("alamat"),
              'kelas'=>$this->request->getPost("kelas"),
@@ -358,6 +453,14 @@ class Admin extends BaseController
 
         $MapelModel = new MapelModel();
         $data['mapel'] = $MapelModel->getMapel();
+
+        $guruModel = new GuruModel();
+        $data['mapel_nama'] = $guruModel->getMapelNama();
+
+        $guruModel = new GuruModel();
+        $data['daftar_guru'] = $guruModel->getOnlyGuru(); // Ambil hanya guru
+
+
 
         $header = view('admin/template/header');
         $mainContent = view('admin/data_mapel', $data);
@@ -420,7 +523,25 @@ class Admin extends BaseController
         }
 
         $UserModel = new UserModel();
-        $data['siswa'] = $UserModel->getSiswa();
+        $kelas = $this->request->getGet('kelas');
+
+        
+
+        if($kelas == "10"){
+            $data['siswa'] = $UserModel->getSiswa10();
+        }
+        else if($kelas == "11"){
+            $data['siswa'] = $UserModel->getSiswa11();
+        }
+        else if($kelas == "12"){
+            $data['siswa'] = $UserModel->getSiswa12();
+        }
+        else if($kelas == NULL){
+           $data['siswa'] = $UserModel->getSiswa(); 
+        }
+        else{
+           $data['siswa'] = $UserModel->getSiswa(); 
+        }
 
         $header = view('admin/template/header');
         $mainContent = view('admin/data_siswa', $data);
@@ -467,7 +588,7 @@ class Admin extends BaseController
                 }
 
                 $userData = [
-                    'nisn' => $row[0],
+                    'nis' => $row[0],
                     'username' => $row[1],
                     'password' => password_hash($row[2], PASSWORD_BCRYPT), // Hash password
                     'nama_lengkap' => $row[3],
@@ -485,6 +606,6 @@ class Admin extends BaseController
             return redirect()->to(base_url('admin/data_siswa'))->with('error', 'Terjadi kesalahan saat mengunggah file');
         }
     }
-
 }
+
 ?>

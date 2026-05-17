@@ -5,15 +5,15 @@
             <div class="container-fluid">
                 <div class="row page-titles">
                     <div class="col p-md-0">
-                        <h4>Edit Mapel</h4>
+                        <h4>Edit Data</h4>
                     </div>
                     <div class="col p-md-0">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a>
                             </li>
-                            <li class="breadcrumb-item active">Edit Mapel</li>
+                            <li class="breadcrumb-item active">Edit Data</li>
                         </ol>
-                    </div>
+                    </div> 
                 </div>
 
                 <div class="row">
@@ -25,7 +25,7 @@
                             <div class="col-12">
                                 <div class="card forms-card">
                                     <div class="card-body">
-                                        <h4 class="card-title mb-4">Edit Nama Mapel</h4>
+                                        <h4 class="card-title mb-4">Edit Data Guru</h4>
                                         <div class="basic-form">
                                             <form method="post" action="<?= base_url('admin/update_guru'); ?>" enctype="multipart/form-data">
                                             <?php foreach ($guru as $g): ?>
@@ -46,6 +46,14 @@
                                                     <label class="text-label">Profil Picture</label>
                                                     <input type="file" name="profil_picture" class="form-control">
                                                     <img class="mt-2" width="150" src="<?= base_url('profil_picture') ?>/<?= $g->profil_picture; ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="text-label">Username</label>
+                                                    <input type="text" name="username" class="form-control" value="<?= $g->username; ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="text-label">Password</label>
+                                                    <input type="password" name="password" class="form-control">
                                                 </div>
                                             <?php endforeach; ?>
                                             <button type="submit" class="btn btn-warning btn-form mr-2">Edit</button>

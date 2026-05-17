@@ -38,14 +38,88 @@
                                 <div class="col-12">
                                     <div class="card">
                                         <div class="card-body">
-                                            <h4 class="card-title">Pendahuluan</h4>
+                                            <h4 class="card-title">Teks Materi</h4>
                                             <textarea id="myTextarea" name="myTextarea" class="form-control" rows="10"><?php foreach ($isi_materimapel as $imm): ?><?php echo $imm->pendahuluan; endforeach; ?></textarea>
                                             <input type="text" name="id_mat" value="<?= $id_mat; ?>" hidden>
                                             <input type="text" name="id_dm" value="<?= $id_dm; ?>" hidden>
                                         </div>
+
+                                        <div class="card-body">
+    <!-- Materi tetap -->
+    <!-- <h4 class="card-title">Pendahuluan</h4>
+    <textarea id="myTextarea" name="myTextarea" class="form-control" rows="10">
+        <?php foreach ($isi_materimapel as $imm): ?><?php echo $imm->pendahuluan; endforeach; ?>
+    </textarea> -->
+
+    <!-- ID materi dan detail mapel -->
+    <input type="hidden" name="id_mat" value="<?= $id_mat; ?>">
+    <input type="hidden" name="id_dm" value="<?= $id_dm; ?>">
+    
+    <!-- Input waktu pengerjaan -->
+    <div class="form-group mt-3">
+    <label for="waktu_post_test">Waktu Pengerjaan (Menit)</label>
+    <input type="number" id="waktu_post_test" name="waktu_post_test" class="form-control" 
+        value="<?= isset($isi_materimapel[0]->waktu_post_test) ? $isi_materimapel[0]->waktu_post_test : 30 ?>" 
+        min="1" required>
+</div>
+
+
+    <div class="form-group mt-3">
+    <label for="jumlah_soal">Jumlah Soal yang Ingin Digenerate<span style="font-size: x-small;display: block;">Soal akan ditambahkan pada bank soal yang ada</span></label>
+    <input type="number" name="jumlah_soal" id="jumlah_soal" class="form-control" min="1" max="50" value="10" required>
+    </div>
+
+
+                                        <button type="button" class="btn btn-success" onclick="buatkanSoal()">Buatkan Soal Otomatis</button>
+                                        <div id="hasilSoal" class="mt-3"></div>
                                     </div>
                                 </div>
                             </div>
+                            <!-- Tambahkan CKEditor di bawah -->
+                            <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+                            <script>
+                                if (document.getElementById('myTextarea')) {
+                                    CKEDITOR.replace('myTextarea');
+                                    }
+
+                            </script>
+
+<script>
+function buatkanSoal() {
+    const materi          = encodeURIComponent(CKEDITOR.instances['myTextarea'].getData());
+    const id_mat          = encodeURIComponent(document.querySelector('input[name="id_mat"]').value);
+    const jumlah_soal     = encodeURIComponent(document.querySelector('#jumlah_soal').value);
+    const waktu_post_test = encodeURIComponent(document.querySelector('#waktu_post_test').value);
+
+    const bodyData = `materi=${materi}&id_mat=${id_mat}&jumlah_soal=${jumlah_soal}&waktu_post_test=${waktu_post_test}`;
+
+    fetch("<?= base_url('guru/buatkan_soal') ?>", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: bodyData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        if (data.error) {
+            document.getElementById("hasilSoal").innerHTML =
+                `<span style='color:red'>${data.error}</span>`;
+        } else {
+            document.getElementById("hasilSoal").innerHTML =
+                `<b>${data.message}</b>`;
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        document.getElementById("hasilSoal").innerHTML =
+            "<span style='color:red'>Terjadi kesalahan saat menghubungi server.</span>";
+    });
+}
+</script>
+
+
 
                             <div class="row">
                                 <div class="col-12">

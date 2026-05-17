@@ -60,11 +60,11 @@
                                             <div class="basic-form">
                                                 <form method="post" action="<?php echo base_url('siswa/update_profil'); ?>">
                                                     <div class="form-group row align-items-center">
-                                                        <label class="col-sm-3 col-form-label text-label">NISN</label>
+                                                        <label class="col-sm-3 col-form-label text-label">NIS</label>
                                                         <div class="col-sm-9">
                                                             <div class="input-group">
                                                                 <input type="text" name="id_users" value="<?php foreach ($data_users as $du): ?><?php echo $du->id_users; endforeach; ?>" hidden>
-                                                                <input type="text" value="<?php foreach ($data_users as $du): ?><?php echo $du->nisn; endforeach; ?>" class="form-control" id="validationDefaultUsername4" name="nisn" readonly aria-describedby="validationDefaultUsername4">
+                                                                <input type="text" value="<?php foreach ($data_users as $du): ?><?php echo $du->nis; endforeach; ?>" class="form-control" id="validationDefaultUsername4" name="nis" readonly aria-describedby="validationDefaultUsername4">
                                                             </div>
                                                         </div>
                                                     </div>

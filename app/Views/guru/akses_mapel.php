@@ -91,13 +91,13 @@
                                                 <div class="col-3 p-1">
                                                     <?php
                                                         if ($pert->post_test == "Tidak Ada") {
-                                                            echo '<a href="' . base_url("guru/buat_posttest?id_mat=" . $pert->id_materi_mapel . "&id_dm=" . $pert->id_detail_mapel) . '" class="btn btn-info btn-sm w-100"><i class="fa fa-pencil"></i> Tes</a></div>';
+                                                            echo '<a href= "' . base_url("guru/buat_posttest?id_mat=" . $pert->id_materi_mapel . "&id_dm=" . $pert->id_detail_mapel) . '" class="btn btn-info btn-sm w-100"><i class="fa fa-pencil"></i> Buat Tes</a></div>';
                                                         } else {
-                                                            echo '<a href="' . base_url("guru/lihat_posttest?id_mat=" . $pert->id_materi_mapel . "&id_dm=" . $pert->id_detail_mapel).'" class="btn btn-primary btn-sm w-100"><i class="fa fa-list"></i> Soal</a></div>';
+                                                            echo '<a href="' . base_url("guru/lihat_posttest?id_mat=" . $pert->id_materi_mapel . "&id_dm=" . $pert->id_detail_mapel).'" class="btn btn-primary btn-sm w-100"><i class="fa fa-eye"></i> Soal</a></div>';
 
                                                             echo"<div class='col-3 p-1'>
                                                     <a href='lihat_nilai?id_dm=$id_dm&id_mat=$pert->id_materi_mapel'' class='btn btn-primary btn-sm w-100'>
-                                                        <i class='fa fa-list'></i> Nilai
+                                                        <i class='fa fa-list'></i> Data
                                                     </a>
                                                 </div>";
                                                         }

@@ -20,8 +20,10 @@
                     <div class="col-lg-12 col-xxl-12 col-xl-5">
                         <div class="row">
 
+                            
                             <div class="col-sm-4 col-lg-4 col-xl-4 col-xxl-4">
                                 <div class="card">
+                                    <a href="<?= base_url('admin/data_siswa?kelas=10') ?>">
                                     <div class="card-body widget-school-stat bg-1 rounded">
                                         <div class="text">
                                             <h2><?php echo $total_kelas10; ?></h2>
@@ -31,11 +33,14 @@
                                             <span><i class="fa fa-book"></i></span>
                                         </div>
                                     </div>
+                                    </a>
                                 </div>
                             </div>
+                            
 
                             <div class="col-sm-4 col-lg-4 col-xl-4 col-xxl-4">
                                 <div class="card">
+                                    <a href="<?= base_url('admin/data_siswa?kelas=11') ?>">
                                     <div class="card-body widget-school-stat bg-1 rounded">
                                         <div class="text">
                                             <h2><?php echo $total_kelas11; ?></h2>
@@ -45,11 +50,13 @@
                                             <span><i class="fa fa-book"></i></span>
                                         </div>
                                     </div>
+                                    </a>
                                 </div>
                             </div>
 
                             <div class="col-sm-4 col-lg-4 col-xl-4 col-xxl-4">
                                 <div class="card">
+                                    <a href="<?= base_url('admin/data_siswa?kelas=12') ?>">
                                     <div class="card-body widget-school-stat bg-1 rounded">
                                         <div class="text">
                                             <h2><?php echo $total_kelas12; ?></h2>
@@ -59,11 +66,13 @@
                                             <span><i class="fa fa-book"></i></span>
                                         </div>
                                     </div>
+                                    </a>
                                 </div>
                             </div>
 
                             <div class="col-sm-6 col-lg-6 col-xl-6 col-xxl-6">
                                 <div class="card">
+                                    <a href="<?= base_url('admin/data_mapel') ?>">
                                     <div class="card-body widget-school-stat bg-2 rounded">
                                         <div class="text">
                                             <h2><?php echo $jumlah_mapel; ?></h2>
@@ -73,22 +82,25 @@
                                             <span><i class="fa fa-book"></i></span>
                                         </div>
                                     </div>
+                                    </a>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 col-lg-6 col-xl-6 col-xxl-6">
+                            <!-- <div class="col-sm-6 col-lg-6 col-xl-6 col-xxl-6">
                                 <div class="card">
+                                    <a href="<?= base_url('admin/data_mapel') ?>">
                                     <div class="card-body widget-school-stat bg-2 rounded">
                                         <div class="text">
                                             <h2><?php echo $materi_mapel; ?></h2>
-                                            <p>Total Materi Mapel</p>
+                                            <p>Total Materi Mapel (Pertemuan)</p>
                                         </div>
                                         <div class="icon">
                                             <span><i class="fa fa-book"></i></span>
                                         </div>
                                     </div>
+                                    </a>
                                 </div>
-                            </div>
+                            </div> -->
 
                         </div>
 

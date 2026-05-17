@@ -3,7 +3,7 @@
         ***********************************-->
         <div class="content-body">
             <div class="container-fluid">
-                <div class="row page-titles">
+                <div class="row page-titles"> 
                     <div class="col p-md-0">
                         <h4>Tambah Data Siswa</h4>
                     </div>
@@ -61,17 +61,18 @@
                                     </div>
                                 </div>
 
-                                <div class="card mt-3">
+                                <div class="card mt-4 mb-5">
                                     <div class="card-body">
                                         <div class="table-responsive">
                                             <table id="example" class="display" style="min-width: 845px">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
-                                                    <th>NISN</th>
+                                                    <th>NIS</th>
                                                     <th>Nama Siswa</th>
                                                     <th>No HP</th>
                                                     <th>Alamat</th>
+                                                    <th>Kelas</th>
                                                     <th><center>Aksi</center></th>
                                                 </tr>
                                             </thead>
@@ -82,17 +83,18 @@
                                                 <?php foreach ($siswa as $g): ?>
                                                 <tr>
                                                     <td><?= $no; ?></td>
-                                                    <td><?= $g->nisn; ?></td>
+                                                    <td><?= $g->nis; ?></td>
                                                     <td><?= $g->nama_lengkap ?></td>
                                                     <td><?= $g->no_hp ?></td>
                                                     <td><?= $g->alamat ?></td>
+                                                    <td><?= $g->kelas ?></td>
                                                     <td>
                                                     <div class="col-12 text-center" style="width: 350px;">
                                                         <a href="<?= base_url('admin/edit_siswa?id_users='.$g->id_users.''); ?>">
-                                                            <button type="button" class="btn btn-warning btn-xs">Edit Data<span class="btn-icon-right"><i class="fa fa-arrow-circle-right "></i></span></button>
+                                                            <button type="button" class="btn btn-warning btn-xs">Edit <span class="btn-icon-right"><i class="fa fa-arrow-circle-right "></i></span></button>
                                                         </a>
                                                         <a href="<?= base_url('admin/hapus_guru?id_users='.$g->id_users.''); ?>">
-                                                            <button type="button" class="btn btn-danger btn-xs" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus Data <span class="btn-icon-right"><i class="fa fa-trash"></i></span></button>
+                                                            <button type="button" class="btn btn-danger btn-xs" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus <span class="btn-icon-right"><i class="fa fa-trash"></i></span></button>
 
                                                         </a>
                                                     </div>
@@ -106,10 +108,11 @@
                                             <tfoot>
                                                 <tr>
                                                     <th>No</th>
-                                                    <th>NISN</th>
+                                                    <th>NIS</th>
                                                     <th>Nama Siswa</th>
                                                     <th>No HP</th>
                                                     <th>Alamat</th>
+                                                    <th>Kelas</th>
                                                     <th><center>Aksi</center></th>
                                                 </tr>
                                             </tfoot>
